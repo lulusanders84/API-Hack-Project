@@ -1,11 +1,75 @@
+body {
+	font-family: 'Open Sans', sans-serif;
+	background-image: url(https://cdn.viagogo.net/img/cat/2/1/37.jpg);
+	background-size: cover;
+}
+
+form {
+	text-align: center;
+	margin-bottom: 20px;
+}
+h1 {
+	text-align: center;
+	font-family: 'Josefin Sans', sans-serif;
+}
+
 table {
 	text-align: center;
 }
 
+
+.flag, .country-name, .latest-result, .roster, .history, .timeline {
+	border: 1px solid black;
+}
+
+.flag, .country-name, .latest-result {
+	padding: 1.04166666%;
+}
+
+.roster, .history, .timeline {
+	height: 500px;
+	background-color: rgba(255, 255, 255, 0.5)
+}
+
+.flag {
+	width: 33.333%;
+	height: 100%;
+}
+
+.country-name {
+	position: relative;
+	left: 16.666%;
+	bottom: 75%;
+	width: 49.999%;
+	height: 50%;
+	background-color: rgba(255, 255, 255, 0.5)
+}
+
+.latest-result {
+	position: relative;
+	left: 66.666%;
+	bottom: 125%;
+	height: 50%;
+	width: 33.333%;
+	background-color: rgba(255, 255, 255, 0.5)
+}
 .left-group {
 	float: left;
+	padding-left: 200px;
+}
+
+
+.profile-container {
+	max-width: 80%;
+	background-color: rgba(255, 255, 255, 0.3)
 }
 
 .right-group {
 	float: right;
+	padding-right: 200px;
+}
+
+.title-container {
+	margin: 20px auto;
+	height: 200px;
 }

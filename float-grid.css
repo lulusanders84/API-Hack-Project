@@ -1,4 +1,6 @@
-
+* {
+  box-sizing: border-box;
+}
 
 /* Grid measurements:
  *
@@ -30,7 +32,7 @@
   clear: both;
 }
 
-.col-1, .col-2, .col-3, .col-4, .col-6, .col-8, .col-12 {
+.col-3, .col-4, .col-6, .col-12 {
   float: left;
 
   /* Gutters:
@@ -41,29 +43,16 @@
    */
   padding-left: 1.04166666%;
   padding-right: 1.04166666%;
-  padding-bottom: 1.04166666%;
-  text-align: center;
 }
 
 /* Mobile defaults */
-.col-6 {
-  width: 50%;
-}
-
-.col-2, .col-3, .col-4, .col-6, .col-8, .col-12 {
+.col-3, .col-4, .col-6, .col-12 {
   width: 100%;
 }
 
 
 /* Non-mobile, grid */
 @media only screen and (min-width: 640px) {
-  .col-1 {
-    width: 10%;
-  }
-
-  .col-2 {
-    width: 16.66%;
-  }
   /* 3 columns, 3/12 in % */
   .col-3 {
     width: 25%;
@@ -79,11 +68,7 @@
     width: 50%;
   }
 
-  .col-8 {
-    width: 66.66%;
-  }
   /* 12 columns */
   .col-12 {
     width: 100%;
 }
-

@@ -6,6 +6,7 @@
 	<title>World Cup 2018</title>
 	<link rel="stylesheet" type="text/css" href="float-grid.css">
 	<link rel="stylesheet" type="text/css" href="main.css">
+	<link href="https://fonts.googleapis.com/css?family=Josefin+Sans|Open+Sans" rel="stylesheet">
 </head>
 <body>
 	<header role="banner">
@@ -13,13 +14,15 @@
 	</header>
 	<main role="main">
 	<section class="row js-country-selector">
-		<label for="countries">
-			Pick a country:
-		</label>
-		<select id="countries">
-		</select>
+		<form>
+			<label for="countries">
+				Pick a country:
+			</label>
+			<select id="countries">
+			</select>
+		</form>
 	</section>
-	<section class="js-bracket">
+	<section class="js-bracket" hidden>
 		<div class="row">
 			<table id="group-a" class="left-group">
 				<th>Group A</th>
@@ -46,7 +49,6 @@
 					<td class="js-points">0</td>
 				</tr>
 			</table>
-			<div class="knockouts"
 			<table id="group-b" class="right-group">
 				<th>Group B</th>
 				<th>PL</th>
@@ -99,9 +101,6 @@
 					<td class="js-points">0</td>
 				</tr>
 			</table>
-			<div class="col-8">
-				knockout stages
-			</div>
 			<table id="group-b" class="right-group">
 				<th>Group D</th>
 				<th>PL</th>
@@ -154,9 +153,6 @@
 					<td class="js-points">0</td>
 				</tr>
 			</table>
-			<div class="col-8">
-				knockout stages
-			</div>
 			<table id="group-b" class="right-group">
 				<th>Group F</th>
 				<th>PL</th>
@@ -209,9 +205,6 @@
 					<td class="js-points">0</td>
 				</tr>
 			</table>
-			<div class="col-8">
-				knockout stages
-			</div>
 			<table id="group-b" class="right-group">
 				<th>Group H</th>
 				<th>PL</th>
@@ -238,7 +231,26 @@
 				</tr>
 			</table>
 		</div>
-	</section>	
+	</section>
+
+	<section class="js-country-profile">
+		<div class="row profile-container">
+			<div class="row title-container">
+				<div class="flag">flag</div>
+				<div class="country-name">country</div>
+				<div class="latest-result">result</div>
+			</div>
+			<div class="row">
+				<div class="col-6">
+					<div class="col-12 roster"></div>
+					<div class="col-12 history"></div>
+				</div>
+				<div class="col-6">
+					<div class="col-12 timeline"></div>
+				</div>
+			</div>
+		</div>
+
 	</main>
 <script type="text/javascript" src="index.js"></script>
 <script
