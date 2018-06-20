@@ -1,0 +1,11 @@
+table {
+	text-align: center;
+}
+
+.left-group {
+	float: left;
+}
+
+.right-group {
+	float: right;
+}
