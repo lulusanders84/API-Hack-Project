@@ -1,4 +1,10 @@
 
+const JSON_2_JSONP_URL = "https://json2jsonp.com/";
+function createRestCountriesUrl(country) {
+const url = "https://restcountries.eu/rest/v2/name/";
+return `https://restcountries.eu/rest/v2/name/${country}?fullText=true`;
+}
+
 const teams = {
 	groupA: ["Russia", "Saudi Arabia", "Egypt", "Uruguay"],
 	groupB: ["Portugal", "Spain", "Morocco", "Iran"],
@@ -13,31 +19,65 @@ const teams = {
 
 //page loads
 function generateSelectCountryOptions(teams) {
-	let allTeams = [];
-	Object.keys(teams).forEach(function(key) {
-		for (let i = 0; i < teams[key].length; i++) {
-			allTeams.push(teams[key][i])
-		}
-	})
-		
-	return allTeams.sort();
-	
-
+	const countries = Object.keys(teams).reduce((acc, key) => {
+		return [...acc, ...teams[key]];
+	}, 	[])		
+	return countries.sort();
 }
 
 function renderSelectCountryOptions() {
-	let allTeams = generateSelectCountryOptions(teams);
+	const allTeams = generateSelectCountryOptions(teams);
 	console.log(allTeams);
-	let options = allTeams.map(team => {
-		return `<option value=${team}> ${team} </option>`
+	const options = allTeams.map(team => {
+		return `<option value=${team}> ${team} </option>`;
 	})
-	console.log(options)
+	console.log(options);
 	$('#countries').html(options);
 }
 //user selects country
-function handleCountrySelection() {
+function handleCountrySelection(event) {
+	event.preventDefault();
+	console.log ("handleCountrySelection ran");
+	const country = $('#countries option:selected').val();
+	console.log(country);
+	displayCountryFlag(country, countryCodes);
+
 }
+
+//get API data
+
+function getFootballDataApiData() {}
+function getLiveScoreApiData() {}
+function getWikipediaApiData() {}
+
+//API callback functions 
+function callbackCountryFlag(data) {
+	displayCountryFlag(data);
+}
+function callbackFootballData(data) {}
+function callbackLiveScore(data) {}
+function callbackWikipedia(data) {}
+
+//display functions
+function displayCountryFlag(country, countryCodes) {
+	console.log("displayCountryFlag has ran country is", country);
+	const countryCode = Object.keys(countryCodes).reduce((acc, key) => {
+		console.log(key, countryCodes[key], country);
+		if (countryCodes[key] === country) {
+			acc = key;
+		}
+		return acc;
+	}, "BR");
+	$('.js-flag img').attr({ 
+			src: `http://www.countryflags.io/${countryCode}/flat/64.png`, 
+			alt: `${country}'s country flag` 
+	});
+}
+function displayLatestScore() {}
+function displayTeamRoster() {}
+function displayTimeline() {}
+function displayTeamHistory() {}
 
 //renders country profile (flag, country name, latest results, timeline, roster, history)
 
-renderSelectCountryOptions(generateSelectCountryOptions(teams));
+$(renderSelectCountryOptions());

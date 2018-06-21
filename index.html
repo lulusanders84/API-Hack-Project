@@ -14,7 +14,7 @@
 	</header>
 	<main role="main">
 	<section class="row js-country-selector">
-		<form>
+		<form onsubmit="handleCountrySelection(event, countryCodes)">
 			<label for="countries">
 				Pick a country:
 			</label>
@@ -237,7 +237,7 @@
 	<section class="js-country-profile">
 		<div class="row profile-container">
 			<div class="row title-container">
-				<div class="flag">flag</div>
+				<div class="flag js-flag"><img></div>
 				<div class="country-name">country</div>
 				<div class="latest-result">result</div>
 			</div>
@@ -257,6 +257,7 @@
   src="https://code.jquery.com/jquery-3.3.1.min.js"
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
   crossorigin="anonymous"></script>
+<script type="text/javascript" src="countryCodes.js"></script>
 <script type="text/javascript" src="index.js"></script>
 
 </body>
