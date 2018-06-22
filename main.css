@@ -13,6 +13,10 @@ h1 {
 	font-family: 'Josefin Sans', sans-serif;
 }
 
+h2 {
+	font-size: 36px;
+}
+
 table {
 	text-align: center;
 }
@@ -32,8 +36,8 @@ table {
 }
 
 .flag {
-	width: 33.333%;
-	height: 100%;
+	width: 16.666%;
+	height: 50%;
 	text-align: center;
 	vertical-align: center;
 	padding-top: 0px;
@@ -46,16 +50,12 @@ table {
 }
 
 .country-name {
-	position: relative;
-	left: 16.666%;
-	bottom: 75%;
-	width: 49.999%;
+	width: 66.665%;
 	height: 50%;
-	background-color: rgba(255, 255, 255, 0.5)
+	vertical-align: center;
 }
 
 .latest-result {
-	position: relative;
 	left: 66.666%;
 	bottom: 125%;
 	height: 50%;
@@ -79,6 +79,7 @@ table {
 }
 
 .title-container {
+	display: flex;
 	margin: 20px auto;
 	height: 200px;
 }

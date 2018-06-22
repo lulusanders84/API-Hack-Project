@@ -41,7 +41,7 @@ function handleCountrySelection(event) {
 	const country = $('#countries option:selected').val();
 	console.log(country);
 	displayCountryFlag(country, countryCodes);
-
+	displayCountryName(country);
 }
 
 //get API data
@@ -72,6 +72,9 @@ function displayCountryFlag(country, countryCodes) {
 			src: `http://www.countryflags.io/${countryCode}/flat/64.png`, 
 			alt: `${country}'s country flag` 
 	});
+}
+function displayCountryName(country) {
+	$('.js-country-name h2').html(country.toUpperCase());
 }
 function displayLatestScore() {}
 function displayTeamRoster() {}
