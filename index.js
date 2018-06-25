@@ -65,8 +65,8 @@ function callbackFootballDataApiData(response, country) {
   	const FOOTBALL_DATA_PLAYERS_URL = teams.reduce((acc, team) => {
   		console.log(team.name);
   		if (team.name === country) {
-  			console.log ("Teams matching: ", team)
-  			acc = team._links.players.href;
+  			const href = team._links.players.href;
+  			acc = href.substring(0, 4) + "s" + href.substring(4);
   			console.log(acc);
   		}
   		return acc;
