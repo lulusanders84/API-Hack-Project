@@ -38,7 +38,6 @@ function handleCountrySelection(event) {
 	console.log ("handleCountrySelection ran");
 	const country = $('#countries option:selected').val();
 	console.log(country);
-	displayCountryFlag(country, countryCodes);
 	displayCountryName(country);
 	getFixturesApiData(callbackFixtureData, country);
 	getFootballDataApiData(FOOTBALL_DATA_TEAMS_URL, callbackFootballDataApiData, country);
