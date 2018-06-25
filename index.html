@@ -13,6 +13,12 @@
 		<h1> World Cup 2018 </h1>
 	</header>
 	<main role="main">
+		<section class="js-news-feed">
+			<img>
+			<div class="js-news-info">
+				<a></a>
+			</div>
+		</section>
 	<section class="row js-country-selector">
 		<form onsubmit="handleCountrySelection(event, countryCodes)">
 			<label for="countries">
@@ -237,17 +243,41 @@
 	<section class="js-country-profile">
 		<div class="row profile-container">
 			<div class="row title-container">
-				<div class="flag js-flag"><img></div>
-				<div class="country-name js-country-name"><h2></h2></div>
-				<div class="latest-result">result</div>
+				<div class="country js-flag">
+					<img>
+					<div class="country-name">
+							<h2 class="js-country-name"></h2>
+					</div>
+				</div>
+				<div class="js-latest-result latest-result">
+					<h3>Latest Result</h3>
+					<div class="js-game-datetime"></div>
+					<span class="js-home-team"></span> <span class="js-latest-score"></span> <span class="js-away-team"></span>
+					<div class="row js-scorers">
+						<div class="col-6 js-home-scorers">
+							<ul>
+							</ul>
+						</div>
+						<div class="col-6 js-away-scorers">
+							<ul>
+							</ul>
+						</div>
+					</div>
+				</div>
 			</div>
 			<div class="row">
-				<div class="col-6">
-					<div class="col-12 roster"></div>
-					<div class="col-12 history"></div>
+				<div class="col-8">
+					<div class="col-12 js-roster roster">
+						<ul></ul>
+					</div>
+					<div id="article" class="col-12 history">
+						<p></p>
+					</div>
 				</div>
-				<div class="col-6">
-					<div class="col-12 timeline"></div>
+				<div class="col-4">
+					<div class="col-12 js-timeline timeline">
+						
+					</div>
 				</div>
 			</div>
 		</div>

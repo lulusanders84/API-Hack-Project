@@ -14,16 +14,34 @@ h1 {
 }
 
 h2 {
+	display: flex;
 	font-size: 36px;
+	justify-content: center;
+}
+
+h3 {
+	padding: 0px;
+	margin: 0px;
+	text-align: center;
 }
 
 table {
 	text-align: center;
 }
 
+ul {
+	list-style-type: none;
+}
 
-.flag, .country-name, .latest-result, .roster, .history, .timeline {
+
+.country, .flag, .country-name, .latest-result, .roster, .history, .timeline {
 	border: 1px solid black;
+}
+
+.country-name {
+	display: flex;
+  	justify-content: center;
+  	align-items: center;
 }
 
 .flag, .country-name, .latest-result {
@@ -31,37 +49,48 @@ table {
 }
 
 .roster, .history, .timeline {
-	height: 500px;
+	min-height: 500px;
 	background-color: rgba(255, 255, 255, 0.5)
 }
 
 .flag {
-	width: 16.666%;
-	height: 50%;
+	width: auto;
+	height: 100%;
 	text-align: center;
 	vertical-align: center;
 	padding-top: 0px;
+	overflow: hidden;
 
 }
 
-.flag img {
+.country-name img {
 	width: 100%;
 	height: auto;
+	vertical-align: center;
 }
 
-.country-name {
-	width: 66.665%;
-	height: 50%;
+.country {
+	display: flex;
+	width: 100%;
+	height: auto;
 	vertical-align: center;
+	overflow: hidden;
 }
 
 .latest-result {
 	left: 66.666%;
 	bottom: 125%;
-	height: 50%;
+	min-height: 50%;
 	width: 33.333%;
 	background-color: rgba(255, 255, 255, 0.5)
 }
+
+.latest-result ul {
+	list-style-type: none;
+	font-size: 12px;
+	padding: 0px;
+}
+
 .left-group {
 	float: left;
 	padding-left: 200px;
@@ -81,5 +110,5 @@ table {
 .title-container {
 	display: flex;
 	margin: 20px auto;
-	height: 200px;
+	height: 150px;
 }
