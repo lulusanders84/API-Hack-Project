@@ -189,7 +189,6 @@ function createTeamFixturesArr(data, country, fixturesArr) {
 
 function getWikipediaApiData(country) {
 	const apiUrl = `https://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&section=0&page=${country}_national_football_team&callback=?`;
-	console.log("apiUrl:", apiUrl);
     $.ajax({
         type: "GET",
         url: apiUrl,
