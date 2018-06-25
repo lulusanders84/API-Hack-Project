@@ -42,6 +42,7 @@ function handleCountrySelection(event) {
 	getFixturesApiData(callbackFixtureData, country);
 	getFootballDataApiData(FOOTBALL_DATA_TEAMS_URL, callbackFootballDataApiData, country);
 	getWikipediaApiData(country);
+	$('.js-country-profile').removeClass('inactive');
 
 }
 

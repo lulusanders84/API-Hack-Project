@@ -20,7 +20,7 @@ h2 {
 }
 
 h3 {
-	padding: 0px;
+	padding-top: 10px;
 	margin: 0px;
 	text-align: center;
 }
@@ -34,10 +34,6 @@ ul {
 }
 
 
-.country, .flag, .country-name, .latest-result, .roster, .history, .timeline {
-	border: 1px solid black;
-}
-
 .country-name {
 	display: flex;
   	justify-content: center;
@@ -45,7 +41,7 @@ ul {
 }
 
 .flag, .country-name, .latest-result {
-	padding: 1.04166666%;
+	padding: 0 1.04166666%;
 }
 
 .roster, .history, .timeline {
@@ -75,6 +71,10 @@ ul {
 	height: auto;
 	vertical-align: center;
 	overflow: hidden;
+}
+
+.inactive {
+	display: none;
 }
 
 .latest-result {
