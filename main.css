@@ -67,8 +67,6 @@ ul {
 
 .country {
 	display: flex;
-	width: 100%;
-	height: auto;
 	vertical-align: center;
 	overflow: hidden;
 }
@@ -78,10 +76,6 @@ ul {
 }
 
 .latest-result {
-	left: 66.666%;
-	bottom: 125%;
-	min-height: 50%;
-	width: 33.333%;
 	background-color: rgba(255, 255, 255, 0.5)
 }
 
@@ -109,6 +103,6 @@ ul {
 
 .title-container {
 	display: flex;
-	margin: 20px auto;
+	margin: 10px auto;
 	height: 150px;
 }

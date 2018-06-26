@@ -27,7 +27,7 @@ function renderSelectCountryOptions() {
 	const allTeams = generateSelectCountryOptions(teams);
 	console.log(allTeams);
 	const options = allTeams.map(team => {
-		return `<option value=${team}> ${team} </option>`;
+		return `<option value='${team}'> ${team} </option>`;
 	})
 	console.log(options);
 	$('#countries').html(options);
@@ -43,10 +43,39 @@ function handleCountrySelection(event) {
 	getFootballDataApiData(FOOTBALL_DATA_TEAMS_URL, callbackFootballDataApiData, country);
 	getWikipediaApiData(country);
 	$('.js-country-profile').removeClass('inactive');
-
 }
 
-//get API data
+function displayCountryName(country) {
+	$('.js-country-name').html(country.toUpperCase());
+}
+
+function getFixturesApiData(callback) {
+  	$.getJSON(FIFA_FIXTURES_URL, callback);
+}
+
+function callbackFixtureData(data) {
+	const country = $('#countries option:selected').val();
+
+	const fixtureInfo = returnFixtureInfo(data, country);
+	const flagUrl = function(fixtureInfo) {
+		if (fixtureInfo.home_team === country) {
+			return fixtureInfo.home_flag;
+		} else {
+			return fixtureInfo.away_flag;
+		}
+	}
+	console.log(fixtureInfo);
+	const FIFA_LIVE_SCORE_URL = "https://fifa-2018-apis.herokuapp.com/fifa/live" + fixtureInfo.link;
+	console.log(FIFA_LIVE_SCORE_URL);	
+	createTeamFixturesArr(data, country, teamFixtures);
+	getResultsApiData(FIFA_LIVE_SCORE_URL, callbackLatestResultData);
+	displayCountryFlag(country, flagUrl(fixtureInfo));
+	$('.js-timeline').html
+	$('.js-game-datetime').html(fixtureInfo.datetime);
+	$('.js-home-team').html(fixtureInfo.home_team);
+	$('.js-away-team').html(fixtureInfo.away_team);
+
+}
 
 function getFootballDataApiData(apiUrl, callbackFunc, country) {
 	console.log(callbackFunc);
@@ -93,9 +122,7 @@ function getNewsApiData(callback) {
   $.getJSON(YOUTUBE_SEARCH_URL, query, callback);
 }
 
-function getFixturesApiData(callback) {
-  	$.getJSON(FIFA_FIXTURES_URL, callback);
-}
+
 
 function getResultsApiData(apiUrl, callbackFunc, fixturesArr, index) {
 	$.ajax({
@@ -108,29 +135,7 @@ function getResultsApiData(apiUrl, callbackFunc, fixturesArr, index) {
 })
 }
 
-function callbackFixtureData(data) {
-	const country = $('#countries option:selected').val();
 
-	const fixtureInfo = returnFixtureInfo(data, country);
-	const flagUrl = function(fixtureInfo) {
-		if (fixtureInfo.home_team === country) {
-			return fixtureInfo.home_flag;
-		} else {
-			return fixtureInfo.away_flag;
-		}
-	}
-	console.log(fixtureInfo);
-	const FIFA_LIVE_SCORE_URL = "https://fifa-2018-apis.herokuapp.com/fifa/live" + fixtureInfo.link;
-	console.log(FIFA_LIVE_SCORE_URL);	
-	createTeamFixturesArr(data, country, teamFixtures);
-	getResultsApiData(FIFA_LIVE_SCORE_URL, callbackLatestResultData);
-	displayCountryFlag(country, flagUrl(fixtureInfo));
-	$('.js-timeline').html
-	$('.js-game-datetime').html(fixtureInfo.datetime);
-	$('.js-home-team').html(fixtureInfo.home_team);
-	$('.js-away-team').html(fixtureInfo.away_team);
-
-}
 
 function callbackResultsData(data, fixturesArr, index) {
 	fixturesArr[index].results = data.data;
@@ -200,10 +205,9 @@ function getWikipediaApiData(country) {
         async: false,
         dataType: "json",
         success: function (data, textStatus, jqXHR) {
- 			console.log(data);
             var markup = data.parse.text["*"];
             var blurb = $('<div></div>').html(markup);
-            $('#article').html($(blurb).find('p'));
+            $('.js-history p').html($(blurb).find('p'));
         },
         error: function (errorMessage) {
         }
@@ -242,9 +246,7 @@ function displayCountryFlag(country, flagUrl) {
 	return $('.js-flag img').attr({src:`${flagUrl}`, alt: `${country}'s flag`})
 }
 	
-function displayCountryName(country) {
-	$('.js-country-name').html(country.toUpperCase());
-}
+
 function displayNews(data) {
 	//store news data in newsData object
 	//display first image in js-news-feed
@@ -300,7 +302,7 @@ function displayTimeline(fixturesArr) {
 			</div>`
 	});
 
-	$('.js-timeline').html(allResults);
+	$('.js-timeline p').html(allResults);
 }
 function displayTeamHistory() {}
 
