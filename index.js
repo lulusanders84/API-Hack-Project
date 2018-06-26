@@ -149,7 +149,7 @@ const teams = {
 		});
 	}
 
-//function that retrieve wikipedia data and places in variable
+//functions that retrieve wikipedia data and places in variable
 	function getHistoryInfo(country){
 		getWikipediaApiData(country);
 	}
@@ -177,10 +177,36 @@ const teams = {
 		console.log(history);
 	}
 
+//functions that display flag
+	function displayFlag(country) {
+		const url = getFlagUrl(country);
+		renderFlag(url, country);
+	}
+
+	function getFlagUrl(country) {
+		return groupStageFixtures.reduce((acc, fixture) => {
+			if (fixture.home_team === country) {
+				acc = fixture.home_flag;
+			}
+			if (fixture.away_team === country) {
+				acc = fixture.away_flag;
+			}
+			return acc;
+		})
+	}
+
+	function renderFlag(url, country){
+		$('.js-flag img').attr({
+			src: url,
+			alt: `${country}'s flag`,
+		})
+	}
+
+
 function displayTeamHistory(data) {
-    var markup = data.parse.text["*"];
-    var blurb = $('<div></div>').html(markup);
-    $('.js-history p').html($(blurb).find('p'));
+   var markup = data.parse.text["*"];
+   var blurb = $('<div></div>').html(markup); 
+   $('.js-history p').html($(blurb).find('p'));  
 }
 
 //function that handles submit country event
@@ -190,6 +216,7 @@ function displayTeamHistory(data) {
 		assignCountryVar(country);
 		getRosterArray(country);
 		getHistoryInfo(country);
+		displayFlag(country);
 	}
 function startWorldCupApp() {
 	buildGroupStageFixturesObj();
