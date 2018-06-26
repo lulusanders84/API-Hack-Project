@@ -20,9 +20,9 @@ const teams = {
 //functions that retrieve FIFA fixture data and build groupStageFixtures array
 
 		function buildGroupStageFixturesObj() {
-			getFixturesApiData(callbackFixtureData);
-			
+			getFixturesApiData(callbackFixtureData);	
 		}
+
 		function getFixturesApiData(callback) {
 		  	$.getJSON(FIFA_FIXTURES_URL, callback);
 		}
@@ -64,6 +64,11 @@ const teams = {
 			groupStageFixtures.forEach(function(match, i) {
 		  		getResultsApiData(match.link, callbackResultsData, groupStageFixtures, i)
 		  	})
+		  	enableCountrySelectionSubmit();
+		}
+
+		function enableCountrySelectionSubmit(){
+			$('#country-submit').removeAttr("disabled");
 		}
 
 		function getResultsApiData(apiUrl, callbackFunc, fixturesArr, index) {
@@ -202,6 +207,12 @@ const teams = {
 		})
 	}
 
+//function displays country name
+	
+	function displayCountryName(country) {
+	$('.js-country-name').html(country.toUpperCase());
+	}
+
 
 function displayTeamHistory(data) {
    var markup = data.parse.text["*"];
@@ -217,6 +228,7 @@ function displayTeamHistory(data) {
 		getRosterArray(country);
 		getHistoryInfo(country);
 		displayFlag(country);
+		displayCountryName(country);
 	}
 function startWorldCupApp() {
 	buildGroupStageFixturesObj();
