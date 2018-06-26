@@ -13,70 +13,88 @@ const teams = {
 	groupH: ["Poland", "Senegal", "Colombia", "Japan"],
 }
 
-function buildGroupStageFixturesObj() {
-	getFixturesApiData(callbackFixtureData);
-	
-}
-function getFixturesApiData(callback) {
-  	$.getJSON(FIFA_FIXTURES_URL, callback);
-}
+//functions that retrieve FIFA fixture data and build groupStageFixtures array
 
-function callbackFixtureData(data) {
-	groupStageFixtures = assignGroupStageFixtures(data);
-	getAllResultsApiData(groupStageFixtures);
-}
+		function buildGroupStageFixturesObj() {
+			getFixturesApiData(callbackFixtureData);
+			
+		}
+		function getFixturesApiData(callback) {
+		  	$.getJSON(FIFA_FIXTURES_URL, callback);
+		}
 
-function assignGroupStageFixtures(data, groupStageFixtures) {
-  	const fixtures = data.data.group_stages;
-  	return createFixtures(fixtures);
-  	
-}
+		function callbackFixtureData(data) {
+			groupStageFixtures = assignGroupStageFixtures(data);
+			getAllResultsApiData(groupStageFixtures);
+		}
 
-function createFixtures(fixtures) {
-	const allFixtures = Object.keys(fixtures).reduce((acc, date) => {
-    	const matches = fixtures[date].reduce((acc2, match) => {
-    		const fixtureUnix = Date.parse(match.datetime);
-      		if (fixtureUnix < Date.now()) {
-        		acc2.push(match);
-        	}
-    		return acc2;
-    	}, [])
-    	return [...acc, ...matches];
-    }, []);
-  for (let i = 0; i < allFixtures.length; i++) {
-  	const apiUrl = createMatchResultsApiUrl(allFixtures[i].link);
-  	allFixtures[i].link = apiUrl;
-  }
-  	return allFixtures;
-}
+		function assignGroupStageFixtures(data, groupStageFixtures) {
+		  	const fixtures = data.data.group_stages;
+		  	return createFixtures(fixtures);
+		  	
+		}
 
-function createMatchResultsApiUrl(link) {
-	return "https://fifa-2018-apis.herokuapp.com/fifa/live" + link;
-}
+		function createFixtures(fixtures) {
+			const allFixtures = Object.keys(fixtures).reduce((acc, date) => {
+		    	const matches = fixtures[date].reduce((acc2, match) => {
+		    		const fixtureUnix = Date.parse(match.datetime);
+		      		if (fixtureUnix < Date.now()) {
+		        		acc2.push(match);
+		        	}
+		    		return acc2;
+		    	}, [])
+		    	return [...acc, ...matches];
+		    }, []);
+		  for (let i = 0; i < allFixtures.length; i++) {
+		  	const apiUrl = createMatchResultsApiUrl(allFixtures[i].link);
+		  	allFixtures[i].link = apiUrl;
+		  }
+		  	return allFixtures;
+		}
 
-function getAllResultsApiData(groupStageFixtures) {
-	groupStageFixtures.forEach(function(match, i) {
-  		getResultsApiData(match.link, callbackResultsData, groupStageFixtures, i)
-  	})
-}
+		function createMatchResultsApiUrl(link) {
+			return "https://fifa-2018-apis.herokuapp.com/fifa/live" + link;
+		}
 
-function getResultsApiData(apiUrl, callbackFunc, fixturesArr, index) {
-	$.ajax({
-  url: apiUrl,
-  dataType: 'json',
-  type: 'GET',
-}).done(function(response) {
- 	callbackFunc(response, fixturesArr, index);
-})
-}
+		function getAllResultsApiData(groupStageFixtures) {
+			groupStageFixtures.forEach(function(match, i) {
+		  		getResultsApiData(match.link, callbackResultsData, groupStageFixtures, i)
+		  	})
+		}
 
-function callbackResultsData(data, fixturesArr, index) {
-	fixturesArr[index].results = data.data;
-}
+		function getResultsApiData(apiUrl, callbackFunc, fixturesArr, index) {
+			$.ajax({
+		  url: apiUrl,
+		  dataType: 'json',
+		  type: 'GET',
+		}).done(function(response) {
+		 	callbackFunc(response, fixturesArr, index);
+		})
+		}
+
+		function callbackResultsData(data, fixturesArr, index) {
+			fixturesArr[index].results = data.data;
+		}
+
+//functions that create country list and render country options in select tag
+	function generateSelectCountryOptions(teams) {
+		const countries = Object.keys(teams).reduce((acc, key) => {
+			return [...acc, ...teams[key]];
+		}, 	[])		
+		return countries.sort();
+	}
+
+	function renderSelectCountryOptions() {
+		const allTeams = generateSelectCountryOptions(teams);
+		const options = allTeams.map(team => {
+			return `<option value='${team}'> ${team} </option>`;
+		})
+		$('#countries').html(options);
+	}
 
 function startWorldCupApp() {
 	buildGroupStageFixturesObj();
-	//renderSelectCountryOptions();
+	renderSelectCountryOptions();
 }
 
 $(startWorldCupApp());
