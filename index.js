@@ -3,7 +3,9 @@ const FIFA_FIXTURES_URL = "https://fifa-2018-apis.herokuapp.com/fifa/fixtures";
 const FOOTBALL_DATA_TEAMS_URL = 'https://api.football-data.org/v1/competitions/467/teams';
 const WIKIPEDIA_SEARCH_URL = "https://en.wikipedia.org/w/api.php";
 let groupStageFixtures = [];
+let country = '';
 let roster = [];
+let history = {};
 const teams = {
 	groupA: ["Russia", "Saudi Arabia", "Egypt", "Uruguay"],
 	groupB: ["Portugal", "Spain", "Morocco", "Iran"],
@@ -94,6 +96,11 @@ const teams = {
 		$('#countries').html(options);
 	}
 
+//function to assign country variable
+	function assignCountryVar(countrySelection) {
+		country = countrySelection;
+	}
+
 //functions that retrieve roster from football data and build roster array
 	function getRosterArray(country) {
 		console.log("getRosterArray ran");
@@ -128,7 +135,6 @@ const teams = {
 
 	function callbackFootballDataApiPlayerData(response){
 		roster = buildRosterArray(response);
-		console.log(roster);
 	}
 
 	function buildRosterArray(response) {
@@ -143,11 +149,47 @@ const teams = {
 		});
 	}
 
+//function that retrieve wikipedia data and places in variable
+	function getHistoryInfo(country){
+		getWikipediaApiData(country);
+	}
+
+	function getWikipediaApiData(country) {
+		console.log('getWikipediaApiData has ran');
+		const apiUrl = `https://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&section=0&page=${country}_national_football_team&callback=?`;
+	    $.ajax({
+	        type: "GET",
+	        url: apiUrl,
+	        contentType: "application/json; charset=utf-8",
+	        async: false,
+	        dataType: "json",
+	        success: function (data, textStatus, jqXHR) {
+	            buildHistoryString(data);
+	            console.log("getWikipediaApiData request is done");
+	        },
+	        error: function (errorMessage) {
+	        }
+	    });
+	}
+
+	function buildHistoryString(data) {
+		history = data;
+		console.log(history);
+	}
+
+function displayTeamHistory(data) {
+    var markup = data.parse.text["*"];
+    var blurb = $('<div></div>').html(markup);
+    $('.js-history p').html($(blurb).find('p'));
+}
+
 //function that handles submit country event
 	function handleCountrySelection(event) {
 		event.preventDefault();
 		const country = $('#countries option:selected').val();
+		assignCountryVar(country);
 		getRosterArray(country);
+		getHistoryInfo(country);
 	}
 function startWorldCupApp() {
 	buildGroupStageFixturesObj();
