@@ -6,6 +6,7 @@ let groupStageFixtures = [];
 let country = '';
 let roster = [];
 let history = {};
+let allResults = [];
 const teams = {
 	groupA: ["Russia", "Saudi Arabia", "Egypt", "Uruguay"],
 	groupB: ["Portugal", "Spain", "Morocco", "Iran"],
@@ -17,7 +18,7 @@ const teams = {
 	groupH: ["Poland", "Senegal", "Colombia", "Japan"],
 }
 
-//functions that retrieve FIFA fixture data and build groupStageFixtures array
+//retrieve FIFA fixture data and build groupStageFixtures array
 
 		function buildGroupStageFixturesObj() {
 			getFixturesApiData(callbackFixtureData);	
@@ -64,6 +65,11 @@ const teams = {
 			groupStageFixtures.forEach(function(match, i) {
 		  		getResultsApiData(match.link, callbackResultsData, groupStageFixtures, i)
 		  	})
+			fixturesArrayIsReady();
+		}
+
+		function fixturesArrayIsReady() {
+			fixIran();
 		  	enableCountrySelectionSubmit();
 		}
 
@@ -85,7 +91,18 @@ const teams = {
 			fixturesArr[index].results = data.data;
 		}
 
-//functions that create country list and render country options in select tag
+		function fixIran() {
+			groupStageFixtures.forEach(function (fixture) {
+				if (fixture.home_team === "IR Iran") {
+					fixture.home_team = "Iran";
+				}
+				if (fixture.away_team === "IR Iran") {
+					fixture.away_team = "Iran";
+				}
+			})
+		}
+
+//create country list and render country options in select tag
 	function generateSelectCountryOptions(teams) {
 		const countries = Object.keys(teams).reduce((acc, key) => {
 			return [...acc, ...teams[key]];
@@ -101,15 +118,15 @@ const teams = {
 		$('#countries').html(options);
 	}
 
-//function to assign country variable
+//assign country variable
 	function assignCountryVar(countrySelection) {
 		country = countrySelection;
 	}
 
-//functions that retrieve roster from football data and build roster array
+//retrieve roster from football data and build roster array
 	function getRosterArray(country) {
 		console.log("getRosterArray ran");
-		getFootballDataApiData(FOOTBALL_DATA_TEAMS_URL, callbackFootballDataApiData, country)
+		getFootballDataApiData(FOOTBALL_DATA_TEAMS_URL, callbackFootballDataApiData, country);
 	}
 
 	function getFootballDataApiData(apiUrl, callbackFunc, country) {
@@ -138,7 +155,11 @@ const teams = {
   		getFootballDataApiData(FOOTBALL_DATA_PLAYERS_URL, callbackFootballDataApiPlayerData);
 	}
 
-	function callbackFootballDataApiPlayerData(response){
+	function callbackFootballDataApiPlayerData(response, country){
+		updateRosterArray(response);
+		displayRoster();	}
+
+	function updateRosterArray(response) {
 		roster = buildRosterArray(response);
 	}
 
@@ -154,7 +175,7 @@ const teams = {
 		});
 	}
 
-//functions that retrieve wikipedia data and places in variable
+//retrieve wikipedia data and places in variable
 	function getHistoryInfo(country){
 		getWikipediaApiData(country);
 	}
@@ -179,10 +200,9 @@ const teams = {
 
 	function buildHistoryString(data) {
 		history = data;
-		console.log(history);
 	}
 
-//functions that display flag
+//display flag
 	function displayFlag(country) {
 		const url = getFlagUrl(country);
 		renderFlag(url, country);
@@ -207,12 +227,115 @@ const teams = {
 		})
 	}
 
-//function displays country name
+//displays country name
 	
 	function displayCountryName(country) {
 	$('.js-country-name').html(country.toUpperCase());
 	}
 
+//retrieves results data from groupStageFixtures array
+	function updateResultsArray(country) {
+		allResults = getCountryFixturesData(groupStageFixtures, country);
+	}
+	
+	function getCountryFixturesData(groupStagesFixtures, country) {
+		return groupStagesFixtures.reduce((acc, fixture) => {
+			if (fixture.home_team === country || fixture.away_team === country) {
+				acc.push(fixture);
+			}
+			return acc;
+		}, [])
+	}
+
+	function getDateTime(match){
+		return match.datetime;
+	}
+
+	function getHomeTeam(match) {
+		return match.home_team;
+	}
+
+	function getAwayTeam(match) {
+		return match.away_team;
+	}
+
+	function getScore(match) {
+		console.log(match.results.score);
+		return match.results.score;
+	}
+
+	function getHomeScorers(match) {
+		return match.results.home_scoreres;
+	}
+
+	function getAwayScorers(match) {
+		return match.results.away_scoreres;
+	}
+
+//renders results
+	function renderResults() {
+		console.log(allResults);
+		return allResults.map(match => {
+			return `<div>${getDateTime(match)}</div>
+			<span>${getHomeTeam(match)}</span> <span>${match.results.score}</span> <span>${getAwayTeam(match)}</span>
+			<div class="row js-scorers">
+			<div class="col-6 js-home-scorers">
+				<ul>
+					${renderHomeScorers(match)}
+				</ul>
+			</div>
+			<div class="col-6 js-away-scorers">
+				<ul>
+					${renderAwayScorers(match)}
+				</ul>
+			</div>
+			</div>`
+		});
+	}
+
+	function renderLatestResult(renderedResults) {
+		return renderedResults.pop();
+	}
+
+	function renderHomeScorers(match) {
+		const homeScorers = getHomeScorers(match);
+		return homeScorers.map(scorer => {
+			return `<li>
+					${scorer.title} ${scorer.minute}
+					</li>`
+		})
+	}
+
+	function renderAwayScorers(match) {
+		const awayScorers = getAwayScorers(match);
+		return awayScorers.map(scorer => {
+			return `<li>
+					${scorer.minute} ${scorer.title}
+					</li>`
+		})
+	}
+
+//displays results
+	function displayResults(country) {		
+		const renderedResults = renderResults();
+		const latestResult = renderLatestResult(renderedResults);
+		$('.js-latest-result p').html(latestResult);
+		$('.js-timeline p').html(renderedResults);
+	}
+
+//renders roster
+	function renderRoster() {
+		console.log("renderRoster has ran");
+		return roster.map(player => {
+			return `<li>${player.jerseyNumber} ${player.position} ${player.name}</li>`
+		})
+		console.log(roster);
+	}
+
+	function displayRoster() {
+		playerRoster = renderRoster(roster);
+		$('.js-roster ul').html(playerRoster);
+	}
 
 function displayTeamHistory(data) {
    var markup = data.parse.text["*"];
@@ -224,12 +347,23 @@ function displayTeamHistory(data) {
 	function handleCountrySelection(event) {
 		event.preventDefault();
 		const country = $('#countries option:selected').val();
-		assignCountryVar(country);
+		updateResultsArray(country);
 		getRosterArray(country);
+		console.log("roster:", roster);
 		getHistoryInfo(country);
 		displayFlag(country);
 		displayCountryName(country);
+		displayResults();
+		//displayAllSections(country);
 	}
+
+//display functions
+	function displayAllSections(country) {
+
+		displayRoster();
+		displayResults(country);
+	}
+
 function startWorldCupApp() {
 	buildGroupStageFixturesObj();
 	renderSelectCountryOptions();
