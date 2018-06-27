@@ -1,6 +1,6 @@
 
 const FIFA_FIXTURES_URL = "https://fifa-2018-apis.herokuapp.com/fifa/fixtures";
-const FOOTBALL_DATA_TEAMS_URL = 'https://api.football-data.org/v1/competitions/467/teams';
+const FOOTBALL_DATA_TEAMS_URL = 'https://api.football-data.org/v2/competitions/2000/teams';
 const WIKIPEDIA_SEARCH_URL = "https://en.wikipedia.org/w/api.php";
 let groupStageFixtures = [];
 let country = '';
@@ -277,7 +277,7 @@ const teams = {
 		console.log(allResults);
 		return allResults.map(match => {
 			return `<div>${getDateTime(match)}</div>
-			<span>${getHomeTeam(match)}</span> <span>${match.results.score}</span> <span>${getAwayTeam(match)}</span>
+			<span>${getHomeTeam(match)}</span> <span>${getScore(match)}</span> <span>${getAwayTeam(match)}</span>
 			<div class="row js-scorers">
 			<div class="col-6 js-home-scorers">
 				<ul>
