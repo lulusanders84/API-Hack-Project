@@ -191,7 +191,7 @@ const teams = {
 	        dataType: "json",
 	        success: function (data, textStatus, jqXHR) {
 	            buildHistoryString(data);
-	            console.log("getWikipediaApiData request is done");
+	            displayTeamHistory(history);
 	        },
 	        error: function (errorMessage) {
 	        }
@@ -237,7 +237,7 @@ const teams = {
 	function updateResultsArray(country) {
 		allResults = getCountryFixturesData(groupStageFixtures, country);
 	}
-	
+
 	function getCountryFixturesData(groupStagesFixtures, country) {
 		return groupStagesFixtures.reduce((acc, fixture) => {
 			if (fixture.home_team === country || fixture.away_team === country) {
@@ -337,7 +337,10 @@ const teams = {
 		$('.js-roster ul').html(playerRoster);
 	}
 
+//renders history
+
 function displayTeamHistory(data) {
+	console.log("displayTeamHistory has ran");
    var markup = data.parse.text["*"];
    var blurb = $('<div></div>').html(markup); 
    $('.js-history p').html($(blurb).find('p'));  
@@ -354,14 +357,7 @@ function displayTeamHistory(data) {
 		displayFlag(country);
 		displayCountryName(country);
 		displayResults();
-		//displayAllSections(country);
-	}
 
-//display functions
-	function displayAllSections(country) {
-
-		displayRoster();
-		displayResults(country);
 	}
 
 function startWorldCupApp() {
