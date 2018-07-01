@@ -358,11 +358,11 @@ function removeInactiveClass(className) {
 	function handleCountrySelection(event) {
 		event.preventDefault();
 		const country = $('#countries option:selected').val();
-		console.log(allResults);
-		getRosterArray(country);
-		getHistoryInfo(country);
 		displayFlag(country);
 		displayCountryName(country);
+		getRosterArray(country);
+		getHistoryInfo(country);
+
 		displayResults(country);
 		removeInactiveClass("js-country-profile");
 
