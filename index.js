@@ -31,8 +31,8 @@ const teams = {
 		}
 
 		function callbackFixtureData(data) {
-			//groupStageFixtures = assignFixtures(data.data.group_stages);
-			knockoutFixtures = assignFixtures(data.data.knockout_stages);
+			groupStageFixtures = assignFixtures(data.data.group_stages);
+
 			getAllResultsApiData(groupStageFixtures);
 		}
 
