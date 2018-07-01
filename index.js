@@ -79,7 +79,7 @@ const teams = {
 
 		function enableCountrySelectionSubmit(){
 			console.log("enabled ran")
-			$('#country-submit').removeAttr("disabled");
+			$('#country-submit').removeAttr("disabled").attr({value: "Submit Country"});
 		}
 
 		function getResultsApiData(apiUrl, callbackFunc, fixturesArr, index) {
@@ -227,7 +227,7 @@ const teams = {
 	}
 
 	function renderFlag(url, country){
-		$('.js-flag img').attr({
+		$('.js-flag').attr({
 			src: url,
 			alt: `${country}'s flag`,
 		})
@@ -347,7 +347,12 @@ const teams = {
    	var markup = data.parse.text["*"];
    	var blurb = $('<div></div>').html(markup); 
    	$('.js-history p').html($(blurb).find('p'));  
-	}	
+	}
+
+//display class (remove "inactive" class)
+function removeInactiveClass(className) {
+	$(`.${className}`).removeClass("inactive");
+}	
 
 //function that handles submit country event
 	function handleCountrySelection(event) {
@@ -359,6 +364,8 @@ const teams = {
 		displayFlag(country);
 		displayCountryName(country);
 		displayResults(country);
+		removeInactiveClass("js-country-profile");
+
 
 	}
 

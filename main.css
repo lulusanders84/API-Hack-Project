@@ -1,7 +1,8 @@
-body {
+html {
 	font-family: 'Open Sans', sans-serif;
 	background-image: url(https://cdn.viagogo.net/img/cat/2/1/37.jpg);
 	background-size: cover;
+	background-repeat: no-repeat;
 }
 
 form {
@@ -14,9 +15,7 @@ h1 {
 }
 
 h2 {
-	display: flex;
 	font-size: 36px;
-	justify-content: center;
 }
 
 h3 {
@@ -33,13 +32,6 @@ ul {
 	list-style-type: none;
 }
 
-}
-.country {
-	display: flex;
-  	justify-content: center;
-  	align-items: center;
-}
-
 .flag, .country-name, .latest-result {
 	padding: 0 1.04166666%;
 }
@@ -51,7 +43,6 @@ ul {
 
 .flag {
 	width: auto;
-
 	text-align: center;
 	vertical-align: center;
 	padding-top: 0px;
@@ -60,15 +51,20 @@ ul {
 }
 
 .country img {
+	flex: 1;
 	width: 100%;
 	max-height: 150px;
-	vertical-align: center;
+	margin: auto 0;
 }
 
 .country {
 	display: flex;
 	vertical-align: center;
 	overflow: hidden;
+}
+
+.country-name {
+	margin: auto;
 }
 
 .inactive {
@@ -89,6 +85,10 @@ ul {
 .left-group {
 	float: left;
 	padding-left: 200px;
+}
+
+.name {
+	flex: 2;
 }
 
 
