@@ -1,8 +1,9 @@
 
 const FIFA_FIXTURES_URL = "https://fifa-2018-apis.herokuapp.com/fifa/fixtures";
-const FOOTBALL_DATA_TEAMS_URL = 'https://api.football-data.org/v2/competitions/2000/teams';
+const FOOTBALL_DATA_TEAMS_URL = 'https://api.football-data.org/v1/competitions/467/teams';
 const WIKIPEDIA_SEARCH_URL = "https://en.wikipedia.org/w/api.php";
 let groupStageFixtures = [];
+let knockoutFixtures = [];
 let country = '';
 let roster = [];
 let history = {};
@@ -20,26 +21,28 @@ const teams = {
 
 //retrieve FIFA fixture data and build groupStageFixtures array
 
-		function buildGroupStageFixturesObj() {
+		function buildFixturesArr() {
 			getFixturesApiData(callbackFixtureData);	
 		}
+
 
 		function getFixturesApiData(callback) {
 		  	$.getJSON(FIFA_FIXTURES_URL, callback);
 		}
 
 		function callbackFixtureData(data) {
-			groupStageFixtures = assignGroupStageFixtures(data);
+			//groupStageFixtures = assignFixtures(data.data.group_stages);
+			knockoutFixtures = assignFixtures(data.data.knockout_stages);
 			getAllResultsApiData(groupStageFixtures);
 		}
 
-		function assignGroupStageFixtures(data, groupStageFixtures) {
-		  	const fixtures = data.data.group_stages;
-		  	return createFixtures(fixtures);
-		  	
+		function assignFixtures(data) {
+		  	const fixtures = data;
+		  	return createFixtures(fixtures) 	
 		}
 
 		function createFixtures(fixtures) {
+			console.log(fixtures);
 			const allFixtures = Object.keys(fixtures).reduce((acc, date) => {
 		    	const matches = fixtures[date].reduce((acc2, match) => {
 		    		const fixtureUnix = Date.parse(match.datetime);
@@ -65,15 +68,17 @@ const teams = {
 			groupStageFixtures.forEach(function(match, i) {
 		  		getResultsApiData(match.link, callbackResultsData, groupStageFixtures, i)
 		  	})
-			fixturesArrayIsReady();
+		
 		}
 
 		function fixturesArrayIsReady() {
 			fixIran();
 		  	enableCountrySelectionSubmit();
+		  	console.log(knockoutFixtures);
 		}
 
 		function enableCountrySelectionSubmit(){
+			console.log("enabled ran")
 			$('#country-submit').removeAttr("disabled");
 		}
 
@@ -83,6 +88,9 @@ const teams = {
 		  dataType: 'json',
 		  type: 'GET',
 		}).done(function(response) {
+			if (index === groupStageFixtures.length - 1) {		 	
+				fixturesArrayIsReady();
+			}
 		 	callbackFunc(response, fixturesArr, index);
 		})
 		}
@@ -125,25 +133,23 @@ const teams = {
 
 //retrieve roster from football data and build roster array
 	function getRosterArray(country) {
-		console.log("getRosterArray ran");
 		getFootballDataApiData(FOOTBALL_DATA_TEAMS_URL, callbackFootballDataApiData, country);
 	}
 
 	function getFootballDataApiData(apiUrl, callbackFunc, country) {
-		console.log("getFootballDataApiData ran with apiUrl:", apiUrl);
 		$.ajax({
-  			headers: { 'X-Auth-Token': 'f7302355bfde4075a668246ec2d7056e' },
+  			headers: { 
+  				'X-Auth-Token': 'f7302355bfde4075a668246ec2d7056e'
+	},
   			url: apiUrl,
   			dataType: 'json',
   			type: 'GET',
 		}).done(function(response) {
-			console.log("getFootballDataApiData request is done")
  			callbackFunc(response, country);
 		});
 	}
 
 	function callbackFootballDataApiData(response, country) {
-		console.log("callbackFootballDataApiData ran");
 		const teams = response.teams;
   		const FOOTBALL_DATA_PLAYERS_URL = teams.reduce((acc, team) => {
   			if (team.name === country) {
@@ -234,17 +240,27 @@ const teams = {
 	}
 
 //retrieves results data from groupStageFixtures array
-	function updateResultsArray(country) {
-		allResults = getCountryFixturesData(groupStageFixtures, country);
+	function displayResults(country) {
+		const results = getCountryFixturesData(country);
+		const latestResult = generateHtmlLatestResult(results);
+		$('.js-latest-result p').html(latestResult);
+		$('.js-timeline p').html(results);
+
 	}
 
-	function getCountryFixturesData(groupStagesFixtures, country) {
-		return groupStagesFixtures.reduce((acc, fixture) => {
+	function getCountryFixturesData(country) {
+		let fixtureCount = 0;
+		console.log(groupStageFixtures);
+		return groupStageFixtures.reduce((acc, fixture) => {		
 			if (fixture.home_team === country || fixture.away_team === country) {
-				acc.push(fixture);
+				fixtureCount++;
+				console.log(fixture, fixtureCount);
+				const htmlResults = generateHtmlResults(fixture);
+				acc.push(htmlResults);
 			}
 			return acc;
 		}, [])
+
 	}
 
 	function getDateTime(match){
@@ -260,7 +276,6 @@ const teams = {
 	}
 
 	function getScore(match) {
-		console.log(match.results.score);
 		return match.results.score;
 	}
 
@@ -273,31 +288,28 @@ const teams = {
 	}
 
 //renders results
-	function renderResults() {
-		console.log(allResults);
-		return allResults.map(match => {
-			return `<div>${getDateTime(match)}</div>
+	function generateHtmlResults(match) {
+		return `<div>${getDateTime(match)}</div>
 			<span>${getHomeTeam(match)}</span> <span>${getScore(match)}</span> <span>${getAwayTeam(match)}</span>
 			<div class="row js-scorers">
 			<div class="col-6 js-home-scorers">
 				<ul>
-					${renderHomeScorers(match)}
+					${generateHtmlHomeScorers(match)}
 				</ul>
 			</div>
 			<div class="col-6 js-away-scorers">
 				<ul>
-					${renderAwayScorers(match)}
+					${generateHtmlAwayScorers(match)}
 				</ul>
 			</div>
 			</div>`
-		});
-	}
+		};
 
-	function renderLatestResult(renderedResults) {
+	function generateHtmlLatestResult(renderedResults) {
 		return renderedResults.pop();
 	}
 
-	function renderHomeScorers(match) {
+	function generateHtmlHomeScorers(match) {
 		const homeScorers = getHomeScorers(match);
 		return homeScorers.map(scorer => {
 			return `<li>
@@ -306,7 +318,7 @@ const teams = {
 		})
 	}
 
-	function renderAwayScorers(match) {
+	function generateHtmlAwayScorers(match) {
 		const awayScorers = getAwayScorers(match);
 		return awayScorers.map(scorer => {
 			return `<li>
@@ -315,17 +327,9 @@ const teams = {
 		})
 	}
 
-//displays results
-	function displayResults(country) {		
-		const renderedResults = renderResults();
-		const latestResult = renderLatestResult(renderedResults);
-		$('.js-latest-result p').html(latestResult);
-		$('.js-timeline p').html(renderedResults);
-	}
 
 //renders roster
 	function renderRoster() {
-		console.log("renderRoster has ran");
 		return roster.map(player => {
 			return `<li>${player.jerseyNumber} ${player.position} ${player.name}</li>`
 		})
@@ -339,29 +343,27 @@ const teams = {
 
 //renders history
 
-function displayTeamHistory(data) {
-	console.log("displayTeamHistory has ran");
-   var markup = data.parse.text["*"];
-   var blurb = $('<div></div>').html(markup); 
-   $('.js-history p').html($(blurb).find('p'));  
-}
+	function displayTeamHistory(data) {
+   	var markup = data.parse.text["*"];
+   	var blurb = $('<div></div>').html(markup); 
+   	$('.js-history p').html($(blurb).find('p'));  
+	}	
 
 //function that handles submit country event
 	function handleCountrySelection(event) {
 		event.preventDefault();
 		const country = $('#countries option:selected').val();
-		updateResultsArray(country);
+		console.log(allResults);
 		getRosterArray(country);
-		console.log("roster:", roster);
 		getHistoryInfo(country);
 		displayFlag(country);
 		displayCountryName(country);
-		displayResults();
+		displayResults(country);
 
 	}
 
 function startWorldCupApp() {
-	buildGroupStageFixturesObj();
+	buildFixturesArr();
 	renderSelectCountryOptions();
 }
 
