@@ -14,7 +14,7 @@ const teams = {
 	groupC: ["France", "Australia", "Peru", "Denmark"],
 	groupD: ["Argentina", "Iceland", "Croatia", "Nigeria"],
 	groupE: ["Brazil", "Switzerland", "Costa Rica", "Serbia"],
-	groupF: ["Germany", "Mexico", "Sweden", "South Korea"],
+	groupF: ["Germany", "Mexico", "Sweden", "Korea Republic"],
 	groupG: ["Belgium", "England", "Tunisia", "Panama"],
 	groupH: ["Poland", "Senegal", "Colombia", "Japan"],
 }
@@ -156,6 +156,7 @@ const teams = {
   				const href = team._links.players.href;
   				acc = href.substring(0, 4) + "s" + href.substring(4);
   			}
+  			console.log(acc);
   			return acc;
   		}, "");
   		getFootballDataApiData(FOOTBALL_DATA_PLAYERS_URL, callbackFootballDataApiPlayerData);
@@ -167,6 +168,7 @@ const teams = {
 
 	function updateRosterArray(response) {
 		roster = buildRosterArray(response);
+		console.log(roster);
 	}
 
 	function buildRosterArray(response) {
@@ -242,8 +244,7 @@ const teams = {
 //retrieves results data from groupStageFixtures array
 	function displayResults(country) {
 		const results = getCountryFixturesData(country);
-		const latestResult = generateHtmlLatestResult(results);
-		$('.js-latest-result p').html(latestResult);
+		//const latestResult = generateHtmlLatestResult(results);
 		$('.js-timeline p').html(results);
 
 	}
@@ -256,11 +257,10 @@ const teams = {
 				fixtureCount++;
 				console.log(fixture, fixtureCount);
 				const htmlResults = generateHtmlResults(fixture);
-				acc.push(htmlResults);
+				acc.unshift(htmlResults);
 			}
 			return acc;
 		}, [])
-
 	}
 
 	function getDateTime(match){
@@ -287,7 +287,7 @@ const teams = {
 		return match.results.away_scoreres;
 	}
 
-//renders results
+//generates HTML for results
 	function generateHtmlResults(match) {
 		return `<div>${getDateTime(match)}</div>
 			<span>${getHomeTeam(match)}</span> <span>${getScore(match)}</span> <span>${getAwayTeam(match)}</span>
@@ -305,33 +305,31 @@ const teams = {
 			</div>`
 		};
 
-	function generateHtmlLatestResult(renderedResults) {
-		return renderedResults.pop();
-	}
-
 	function generateHtmlHomeScorers(match) {
 		const homeScorers = getHomeScorers(match);
-		return homeScorers.map(scorer => {
+		const scorers = homeScorers.map(scorer => {
 			return `<li>
 					${scorer.title} ${scorer.minute}
 					</li>`
 		})
+		return scorers.join(" ");
 	}
 
 	function generateHtmlAwayScorers(match) {
 		const awayScorers = getAwayScorers(match);
-		return awayScorers.map(scorer => {
+		const scorers = awayScorers.map(scorer => {
 			return `<li>
 					${scorer.minute} ${scorer.title}
 					</li>`
 		})
+		return scorers.join(" ");
 	}
 
 
 //renders roster
 	function renderRoster() {
 		return roster.map(player => {
-			return `<li>${player.jerseyNumber} ${player.position} ${player.name}</li>`
+			return `<li>${player.position} ${player.name}</li>`
 		})
 		console.log(roster);
 	}
@@ -345,8 +343,13 @@ const teams = {
 
 	function displayTeamHistory(data) {
    	var markup = data.parse.text["*"];
-   	var blurb = $('<div></div>').html(markup); 
-   	$('.js-history p').html($(blurb).find('p'));  
+   	var blurb = $('<div class="js-wiki"></div>').html(markup); 
+   	console.log(blurb);
+   	$('.js-history p').html($(blurb).find('p'));
+   	$( "a[href^='/']" ).prop( "href", function( _idx, oldHref ) {
+   		const href = oldHref.split('/');
+   		return "https://en.wikipedia.org/wiki/" + href[href.length - 1];
+  		});
 	}
 
 //display class (remove "inactive" class)

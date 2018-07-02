@@ -61,6 +61,8 @@ ul {
 	display: flex;
 	vertical-align: center;
 	overflow: hidden;
+	margin: 10px auto;
+	min-height: 150px;
 }
 
 .country-name {
@@ -89,6 +91,7 @@ ul {
 
 .name {
 	flex: 2;
+	margin: auto 0;
 }
 
 
@@ -102,8 +105,4 @@ ul {
 	padding-right: 200px;
 }
 
-.title-container {
-	display: flex;
-	margin: 10px auto;
-	min-height: 150px;
 }
