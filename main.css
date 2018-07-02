@@ -32,9 +32,6 @@ ul {
 	list-style-type: none;
 }
 
-.flag, .country-name, .latest-result {
-	padding: 0 1.04166666%;
-}
 
 .roster, .history, .timeline {
 	min-height: 500px;
@@ -73,17 +70,6 @@ ul {
 	display: none;
 }
 
-.latest-result {
-	background-color: rgba(255, 255, 255, 0.5)
-
-}
-
-.latest-result ul {
-	list-style-type: none;
-	font-size: 12px;
-	padding: 0px;
-}
-
 .left-group {
 	float: left;
 	padding-left: 200px;
@@ -105,4 +91,3 @@ ul {
 	padding-right: 200px;
 }
 
-}
