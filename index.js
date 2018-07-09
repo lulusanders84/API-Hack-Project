@@ -18,6 +18,19 @@ const teams = {
 	groupG: ["Belgium", "England", "Tunisia", "Panama"],
 	groupH: ["Poland", "Senegal", "Colombia", "Japan"],
 }
+const positions = {
+	"keeper": ["keeper"],
+	"left defense": ["left back"],
+	"center defense": [],
+	"right defense": [],
+	"left mid": [],
+	"center mid": [],
+	"right mid": [],
+	"left for": [],
+	"center for": [],
+	"right for": []
+}
+
 
 //retrieve FIFA fixture data and build groupStageFixtures array
 
@@ -164,15 +177,17 @@ const teams = {
 
 	function callbackFootballDataApiPlayerData(response, country){
 		updateRosterArray(response);
-		displayRoster();	}
+		renderRoster();	}
 
 	function updateRosterArray(response) {
 		roster = buildRosterArray(response);
-		console.log(roster);
 	}
 
 	function buildRosterArray(response) {
 		const players = response.players;
+		players.forEach(player => {
+			getWikipediaApiPlayerData(player);
+		});
 		return players.sort(function(a, b) {
 			if (a.jerseyNumber < b.jerseyNumber) {
     			return -1;
@@ -204,6 +219,34 @@ const teams = {
 	        error: function (errorMessage) {
 	        }
 	    });
+	}
+
+		function getWikipediaApiPlayerData(player) {
+		let pageName = player.name.replace(/ /g, "_");
+		const apiUrl = `https://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text|images&section=0&page=${pageName}&callback=?`;
+	   $.ajax({
+	        type: "GET",
+	        url: apiUrl,
+	        contentType: "application/json; charset=utf-8",
+	        async: false,
+	        dataType: "json",
+	        success: function (data, textStatus, jqXHR) {
+	            imageSearchCallBack(data, pageName, player);
+	        },
+	        error: function (errorMessage) {
+	        }
+	    });
+	}
+
+	function imageSearchCallBack(data, pageName, player) {
+		const playerName = new RegExp(pageName);
+		console.log(playerName);
+		player.imageUrl = data.parse.images.reduce((acc, image) => {
+			if (image.search(playerName) != -1) {
+				acc = image;
+			}
+			return acc;
+		}, "test");
 	}
 
 	function buildHistoryString(data) {
@@ -245,7 +288,7 @@ const teams = {
 	function displayResults(country) {
 		const results = getCountryFixturesData(country);
 		//const latestResult = generateHtmlLatestResult(results);
-		$('.js-timeline p').html(results);
+		$('.js-timeline div').html(results);
 
 	}
 
@@ -264,7 +307,7 @@ const teams = {
 	}
 
 	function getDateTime(match){
-		return match.datetime;
+		return moment(match.datetime).format("MMM Do YYYY");
 	}
 
 	function getHomeTeam(match) {
@@ -289,15 +332,17 @@ const teams = {
 
 //generates HTML for results
 	function generateHtmlResults(match) {
-		return `<div>${getDateTime(match)}</div>
-			<span>${getHomeTeam(match)}</span> <span>${getScore(match)}</span> <span>${getAwayTeam(match)}</span>
+		return `
+			<div class="result">
+				<span class="team">${getHomeTeam(match)}</span> <img src="${match.home_flag}"> <span class="score">${getScore(match)}</span> <img src="${match.away_flag}"> <span class="team">${getAwayTeam(match)}</span>
+			</div>
 			<div class="row js-scorers">
-			<div class="col-6 js-home-scorers">
+			<div class="col-6 js-home-scorers inactive">
 				<ul>
 					${generateHtmlHomeScorers(match)}
 				</ul>
 			</div>
-			<div class="col-6 js-away-scorers">
+			<div class="col-6 js-away-scorers inactive">
 				<ul>
 					${generateHtmlAwayScorers(match)}
 				</ul>
@@ -308,7 +353,7 @@ const teams = {
 	function generateHtmlHomeScorers(match) {
 		const homeScorers = getHomeScorers(match);
 		const scorers = homeScorers.map(scorer => {
-			return `<li>
+			return `<li class="scorer">
 					${scorer.title} ${scorer.minute}
 					</li>`
 		})
@@ -318,7 +363,7 @@ const teams = {
 	function generateHtmlAwayScorers(match) {
 		const awayScorers = getAwayScorers(match);
 		const scorers = awayScorers.map(scorer => {
-			return `<li>
+			return `<li class="scorer">
 					${scorer.minute} ${scorer.title}
 					</li>`
 		})
@@ -328,16 +373,41 @@ const teams = {
 
 //renders roster
 	function renderRoster() {
-		return roster.map(player => {
-			return `<li>${player.position} ${player.name}</li>`
-		})
-		console.log(roster);
+		const keepers = generatePositionList("Keeper"); 
+		const leftDef = generatePositionList("Left-Back");
+		const centerDef = generatePositionList("Centre-Back");
+		const rightDef = generatePositionList("Right-Back");
+		const defenders = [...leftDef, ...centerDef, ...rightDef];
+		const defMid = generatePositionList("Defensive Midfield");
+		const leftMid = [...generatePositionList("Left Midfield"), ...generatePositionList("Left Wing")];
+		const centerMid = generatePositionList("Central Midfield");
+		const rightMid = [...generatePositionList("Right Midfield"), ...generatePositionList("Right Wing")];
+		const midfielders = [...defMid, ...leftMid, ...centerMid, ...rightMid];
+		const attMid = [...generatePositionList("Attacking Midfield"), ...generatePositionList("Secondary Striker")];
+		const strikers = generatePositionList("Centre-Forward");
+		const forwards = [...attMid, ...strikers];
+		$('.js-keepers div').html(keepers);
+		$('.js-defenders div').html(defenders);
+		$('.js-midfielders div').html(midfielders);
+		$('.js-forwards div').html(forwards);
 	}
 
-	function displayRoster() {
-		playerRoster = renderRoster(roster);
-		$('.js-roster ul').html(playerRoster);
+	function generatePositionList(position) {
+		console.log(roster);
+		return roster.reduce((acc, player) => {
+			const pageName = player.name.replace(/ /g, "_");
+			const imageSrc = `https://en.wikipedia.org/wiki/${pageName}#/media/File:${player.imageUrl}`;
+			const html = `<div class="player">
+									<img src='${imageSrc}' alt='${player.name}'>
+									<p><a href="https://en.wikipedia.org/wiki/${pageName}">${player.name}</a></p>
+								</div>`;
+			if (player.position.indexOf(position) != -1) {
+				acc.push(html);
+			}
+			return acc;
+		}, [])
 	}
+
 
 //renders history
 
@@ -364,8 +434,8 @@ function removeInactiveClass(className) {
 		displayFlag(country);
 		displayCountryName(country);
 		getRosterArray(country);
-		getHistoryInfo(country);
 
+		getHistoryInfo(country);
 		displayResults(country);
 		removeInactiveClass("js-country-profile");
 

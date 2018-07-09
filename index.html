@@ -3,14 +3,14 @@
 <head>
 	<meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
-	<title>World Cup 2018</title>
+	<title>FIFA World Cup 2018</title>
 	<link rel="stylesheet" type="text/css" href="float-grid.css">
 	<link rel="stylesheet" type="text/css" href="main.css">
 	<link href="https://fonts.googleapis.com/css?family=Josefin+Sans|Open+Sans" rel="stylesheet">
 </head>
 <body>
 	<header role="banner">
-		<h1> World Cup 2018 </h1>
+		<h1> 2018 FIFA World Cup </h1>
 	</header>
 	<main role="main">
 		<section class="js-news-feed">
@@ -240,45 +240,37 @@
 		</div>
 	</section>
 
-	<section class="js-country-profile">
+	<section class="js-country-profile inactive">
 		<div class="row profile-container">
-			<div class="col-8">
+			<div class="col-12">
 				<div class="country">
 					<div class="col-4 flag">
 						<img class="js-flag" alt="country flag">
 					</div>
 					<div class="col-8 name">
-						<h2 class="js-country-name">Country Name</h2>
+						<h2 class="js-country-name country-name">Country Name</h2>
 					</div>
+				</div>
+				<div class="col-12 js-timeline timeline">
+					<div class="results">results</div>
 				</div>
 				<div class="col-12 js-roster roster">
 					<h3>Team Roster</h3>						
-					<div class="keeper">
-						Keeper
+					<div class="row js-keepers keepers">
+						<h3>Keepers</h3>
+						<div class="player-container"></div>
 					</div>
-					<div class="defense">
-						<div class="left-defenders">
-						</div>
-						<div class="center-defenders">
-						</div>
-						<div class="right-defenders">
-						</div>
+					<div class="row js-defenders">
+							<h3>Defenders</h3>
+							<div class="player-container"></div>
 					</div>
-					<div class="midfield">
-						<div class="left-mid">
-						</div>
-						<div class="center-mid">
-						</div>
-						<div class="right-mid">
-						</div>
+					<div class="js-midfielders">
+						<h3>Midfielders</h3>
+							<div class="player-container"></div>
 					</div>
-					<div class="strikers">
-						<div class="left-forward">
-						</div>
-						<div class="center-forward">
-						</div>
-						<div class="right-forward">
-						</div>
+					<div class="js-forwards">
+						<h3>Forwards</h3>
+							<div class="player-container"></div>
 					</div>
 				</div>
 				<div class="col-12 js-history history">
@@ -286,9 +278,7 @@
 					<p>wiki info</p>
 				</div>
 			</div>
-			<div class="col-4 js-timeline timeline">
-				<p>results</p>
-			</div>
+
 		</div>
 	</section>
 
@@ -297,6 +287,7 @@
   src="https://code.jquery.com/jquery-3.3.1.min.js"
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
   crossorigin="anonymous"></script>
+<script type="text/javascript" src="moment.js"></script>
 <script type="text/javascript" src="countryCodes.js"></script>
 <script type="text/javascript" src="index.js"></script>
 

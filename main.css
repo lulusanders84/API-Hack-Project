@@ -1,3 +1,8 @@
+@font-face {
+    font-family: dusha;
+    src: url(Dusha.ttf);
+}
+
 html {
 	font-family: 'Open Sans', sans-serif;
 	background-image: url(https://cdn.viagogo.net/img/cat/2/1/37.jpg);
@@ -11,7 +16,7 @@ form {
 }
 h1 {
 	text-align: center;
-	font-family: 'Josefin Sans', sans-serif;
+	font-family: 'dusha';
 }
 
 h2 {
@@ -34,7 +39,6 @@ ul {
 
 
 .roster, .history, .timeline {
-	min-height: 500px;
 	background-color: rgba(255, 255, 255, 0.5)
 }
 
@@ -64,6 +68,16 @@ ul {
 
 .country-name {
 	margin: auto;
+	font-family: 'dusha';
+}
+
+.defense, .midfield {
+	display: flex;
+	justify-content: space-between;
+}
+
+.left, .center, .right {
+	flex: 1;
 }
 
 .inactive {
@@ -80,14 +94,72 @@ ul {
 	margin: auto 0;
 }
 
+.player {
+	width: 33%;
+	padding-left: 2%;
+	padding-right: 2%;
+
+}
+.player img {
+	width: 100%;
+	height: auto;
+}
+
+.player-container {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+}
 
 .profile-container {
 	max-width: 80%;
 	background-color: rgba(255, 255, 255, 0.3)
 }
 
+.results {
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
+
+}
+
+.result {
+	display:flex;
+	justify-content: space-between;
+	align-content: center;
+	padding: 5px;
+}
+
+.result img {
+	width: 50px;
+	height: 25px;
+}
+
+
 .right-group {
 	float: right;
 	padding-right: 200px;
+}
+
+.roster {
+	color: white;
+	text-align: center;
+	background-image: linear-gradient(to bottom, rgba(0, 128, 0, 0.7), rgba(0, 204, 0, 0.7));
+	background-size: contain;
+	background-repeat: no-repeat;
+}
+
+.roster li {
+	list-style-type: none;
+}
+
+.score {
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+.team {
+	padding-left: 2px;
+	padding-right: 2px;
 }
 
