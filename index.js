@@ -38,15 +38,15 @@ const positions = {
 			getFixturesApiData(callbackFixtureData);	
 		}
 
-
 		function getFixturesApiData(callback) {
 		  	$.getJSON(FIFA_FIXTURES_URL, callback);
 		}
 
 		function callbackFixtureData(data) {
 			groupStageFixtures = assignFixtures(data.data.group_stages);
-
+			knockoutFixtures = assignFixtures(data.data.knockout_stages);
 			getAllResultsApiData(groupStageFixtures);
+			getAllResultsApiData(knockoutFixtures);
 		}
 
 		function assignFixtures(data) {
@@ -76,9 +76,9 @@ const positions = {
 			return "https://fifa-2018-apis.herokuapp.com/fifa/live" + link;
 		}
 
-		function getAllResultsApiData(groupStageFixtures) {
-			groupStageFixtures.forEach(function(match, i) {
-		  		getResultsApiData(match.link, callbackResultsData, groupStageFixtures, i)
+		function getAllResultsApiData(fixtures) {
+			fixtures.forEach(function(match, i) {
+		  		getResultsApiData(match.link, callbackResultsData, fixtures, i)
 		  	})
 		
 		}
@@ -86,7 +86,6 @@ const positions = {
 		function fixturesArrayIsReady() {
 			fixIran();
 		  	enableCountrySelectionSubmit();
-
 		}
 
 		function enableCountrySelectionSubmit(){
@@ -99,7 +98,7 @@ const positions = {
 		  dataType: 'json',
 		  type: 'GET',
 		}).done(function(response) {
-			if (index === groupStageFixtures.length - 1) {		 	
+			if (fixturesArr === knockoutFixtures && index === fixturesArr.length - 1) {		 	
 				fixturesArrayIsReady();
 			}
 		 	callbackFunc(response, fixturesArr, index);
@@ -175,18 +174,10 @@ const positions = {
 	function callbackFootballDataApiPlayerData(response, country){
 		roster = sortRosterArr(response.players);
 		const playerApiRequests = getPlayerApiRequests(response);
-		//buildRosterArray(playerApiRequests);	
+		console.log(playerApiRequests);
+		buildRosterArray();	
 	}
 
-	function buildRosterArray(playerApiRequests) {
-		$.when(...playerApiRequests).done(renderRoster());
-	}
-
-	function getPlayerApiRequests(response) {
-		return roster.map(player => {
-			return getWikipediaApiPlayerData(player);
-		});
-	}
 
 	function sortRosterArr(roster) {
 		return roster.sort(function(a, b) {
@@ -198,6 +189,42 @@ const positions = {
   			return 0;
 		});
 	}
+
+	function buildRosterArray() {
+		$.when(...playerApiRequests).done(renderRoster());
+	}
+
+	function getPlayerApiRequests(response) {
+		return roster.map(player => {
+			return getWikipediaApiPlayerData;
+		});
+	}
+
+	function getWikipediaApiPlayerData(player) {
+		console.log(player);
+		let pageName = player.name.replace(/ /g, "_");
+		const apiUrl = `https://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text|images&section=0&page=${pageName}&callback=?`;
+	   $.ajax({
+	        type: "GET",
+	        url: apiUrl,
+	        contentType: "application/json; charset=utf-8",
+	        async: false,
+	        dataType: "json",
+	        success: function (data, textStatus, jqXHR) {
+	            imageSearchCallBack(data, pageName, player);
+	        },
+	        error: function (errorMessage) {
+	        }
+	    });
+	}
+
+	function imageSearchCallBack(data, pageName, player) {
+
+		player.imageUrl = data.parse.images.find(image => {
+			return image.includes(pageName); 
+		});
+	}
+
 
 //retrieve wikipedia data and places in variable
 	function getHistoryInfo(country){
@@ -221,30 +248,7 @@ const positions = {
 	    });
 	}
 
-		function getWikipediaApiPlayerData(player) {
-		let pageName = player.name.replace(/ /g, "_");
-		const apiUrl = `https://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text|images&section=0&page=${pageName}&callback=?`;
-	   $.ajax({
-	        type: "GET",
-	        url: apiUrl,
-	        contentType: "application/json; charset=utf-8",
-	        async: false,
-	        dataType: "json",
-	        success: function (data, textStatus, jqXHR) {
-	            imageSearchCallBack(data, pageName, player);
-	        },
-	        error: function (errorMessage) {
-	        }
-	    });
-	}
 
-	function imageSearchCallBack(data, pageName, player) {
-
-		player.imageUrl = data.parse.images.find(image => {
-			return image.includes(pageName); 
-		});
-	console.log("imageSearchCallBack " + player.imageUrl);
-	}
 
 	function buildHistoryString(data) {
 		history = data;
@@ -283,15 +287,16 @@ const positions = {
 
 //retrieves results data from groupStageFixtures array
 	function displayResults(country) {
-		const results = getCountryFixturesData(country);
-		//const latestResult = generateHtmlLatestResult(results);
-		$('.js-timeline div').html(results);
-
+		const groupStageResults = getCountryFixturesData(country, groupStageFixtures);
+		const knockoutStageResults = getCountryFixturesData(country, knockoutFixtures);
+		const results = [...knockoutStageResults, ...groupStageResults];
+		$('.js-results div').html(results);
 	}
 
-	function getCountryFixturesData(country) {
+
+	function getCountryFixturesData(country, fixtures) {
 		let fixtureCount = 0;
-		return groupStageFixtures.reduce((acc, fixture) => {		
+		return fixtures.reduce((acc, fixture) => {		
 			if (fixture.home_team === country || fixture.away_team === country) {
 				fixtureCount++;
 				const htmlResults = generateHtmlResults(fixture);
@@ -302,7 +307,8 @@ const positions = {
 	}
 
 	function getDateTime(match){
-		return match.datetime;
+		const date = new Date(match.datetime);
+		return date.toDateString();
 	}
 
 	function getHomeTeam(match) {
@@ -330,15 +336,15 @@ const positions = {
 		return `
 			<div class="result">
 				<div>${getDateTime(match)}</div>
-				<span class="team">${getHomeTeam(match)}</span> <img src="${match.home_flag}"> <span class="score">${getScore(match)}</span> <img src="${match.away_flag}"> <span class="team">${getAwayTeam(match)}</span>
+				<div class="row team">${getHomeTeam(match)} <img src="${match.home_flag}"> <span class="score">${getScore(match)}</span> <img src="${match.away_flag}"> ${getAwayTeam(match)}</div>
 			</div>
 			<div class="row js-scorers">
-			<div class="col-6 js-home-scorers inactive">
+			<div class="col-6 js-home-scorers">
 				<ul>
 					${generateHtmlHomeScorers(match)}
 				</ul>
 			</div>
-			<div class="col-6 js-away-scorers inactive">
+			<div class="col-6 js-away-scorers">
 				<ul>
 					${generateHtmlAwayScorers(match)}
 				</ul>
@@ -390,7 +396,6 @@ const positions = {
 
 	function generatePositionList(position) {
 		return roster.reduce((acc, player) => {
-			console.log("player image", player.imageUrl);
 			const pageName = player.name.replace(/ /g, "_");
 			const imageSrc = `https://en.wikipedia.org/wiki/${pageName}#/media/File:${player.imageUrl}`;
 			const html = `<div class="player">
@@ -404,9 +409,7 @@ const positions = {
 		}, [])
 	}
 
-
 //renders history
-
 	function displayTeamHistory(data) {
    	var markup = data.parse.text["*"];
    	var blurb = $('<div class="js-wiki"></div>').html(markup); 
@@ -433,13 +436,24 @@ function removeInactiveClass(className) {
 		getHistoryInfo(country);
 		displayResults(country);
 		removeInactiveClass("js-country-profile");
-
-
 	}
 
+function handleMenuSelect(className) {
+	$(`.${className}-button`).on("click", function() {
+		$(`.${className}`).toggleClass("inactive");
+	})
+}
+
+function handleCollapsingMenu() {
+		handleMenuSelect("js-results");
+		handleMenuSelect("js-roster");
+		handleMenuSelect("js-history");
+}
 function startWorldCupApp() {
 	buildFixturesArr();
 	renderSelectCountryOptions();
+	handleCollapsingMenu();
+
 }
 
 $(startWorldCupApp());

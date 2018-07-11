@@ -3,6 +3,14 @@
     src: url(Dusha.ttf);
 }
 
+button {
+	border: none;
+}
+
+button:hover {
+	cursor: pointer;
+}
+
 html {
 	font-family: 'Open Sans', sans-serif;
 	background-image: url(https://cdn.viagogo.net/img/cat/2/1/37.jpg);
@@ -16,11 +24,13 @@ form {
 }
 h1 {
 	text-align: center;
-	font-family: 'dusha';
+	font-family: "dusha", sans-serif;
+	font-size: 3.5rem;
+	font-weight: 900;
 }
 
 h2 {
-	font-size: 3.5rem;
+	font-size: 3.0rem;
 	margin: 0;
 }
 
@@ -28,6 +38,18 @@ h3 {
 	padding-top: 10px;
 	margin: 0px;
 	text-align: center;
+}
+
+header p {
+	text-align: center;
+	font-family: "dusha";
+	font-size: 3.5rem;
+	margin: 10px 0;
+}
+
+header span {
+	font-family: 'Open Sans', sans-serif;
+	font-weight: 900;
 }
 
 table {
@@ -38,7 +60,9 @@ ul {
 	list-style-type: none;
 }
 
-
+.history {
+	background-color: rgba(255, 255, 255, 0.7);
+}
 .flag-container {
 	margin-bottom: 10px;
 	display: inline-block;
