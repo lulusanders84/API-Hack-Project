@@ -4,6 +4,7 @@
 	<meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
 	<title>FIFA World Cup 2018</title>
+	<link rel="stylesheet" type="text/css" href="normalize.css">
 	<link rel="stylesheet" type="text/css" href="float-grid.css">
 	<link rel="stylesheet" type="text/css" href="main.css">
 	<link href="https://fonts.googleapis.com/css?family=Josefin+Sans|Open+Sans" rel="stylesheet">
@@ -240,7 +241,7 @@
 		</div>
 	</section>
 
-	<section class="js-country-profile inactive">
+	<section class="js-country-profile">
 		<div class="row profile-container">
 			<div class="col-12">
 				<div class="col-12 country">
@@ -248,41 +249,56 @@
 					<img class="js-flag left-flag" alt="country flag">
 					<div class="js-country-name country-name"><h2>Country Name</h2></div>
 				</div>
-				<div class="col-12 js-results-button menu-title menu-top">
-					<h3>Match Results</h3>
-					<img src="https://www.imagehandler.net/?iset=0117&istyle=0000&fmt=png&w=500&h=500&cmp=85&c=999&img=A1005715000&iindex=0063&retBlank=1x1"> 
-				</div>
-				<div class="col-12 js-results timeline inactive">
-					<div class="results">results</div>
-				</div>
-				<div class="col-12 js-roster-button menu-title">
-					<h3>Team Roster</h3>
-					<img src="https://www.imagehandler.net/?iset=0117&istyle=0000&fmt=png&w=500&h=500&cmp=85&c=999&img=A1005715000&iindex=0063&retBlank=1x1"> 
-				</div>
-				<div class="col-12 js-roster roster inactive">					
-					<div class="row js-keepers keepers">
-						<h3>Keepers</h3>
-						<div class="player-container"></div>
+				<div class="col-12 menu-body">
+					<button>
+						<div class="col-12 js-results-button menu-title menu-top">
+							<img class="arrow closed" src="https://simpkinsand.co.uk/wp-content/uploads/2016/08/white-down-arrow-png.png">
+							<h3>Match Results</h3>
+							<img class="ball" src="https://www.imagehandler.net/?iset=0117&istyle=0000&fmt=png&w=500&h=500&cmp=85&c=999&img=A1005715000&iindex=0063&retBlank=1x1"> 
+						</div>
+					</button>
+
+					<div class="col-12 js-results results inactive">
 					</div>
-					<div class="row js-defenders">
-							<h3>Defenders</h3>
+
+					<button>	
+						<div class="col-12 js-roster-button menu-title">
+							<img class="arrow closed" src="https://simpkinsand.co.uk/wp-content/uploads/2016/08/white-down-arrow-png.png">
+							<h3>Squad</h3>
+							<img class="ball" src="https://www.imagehandler.net/?iset=0117&istyle=0000&fmt=png&w=500&h=500&cmp=85&c=999&img=A1005715000&iindex=0063&retBlank=1x1"> 
+						</div>
+					</button>	
+
+					<div class="col-12 js-roster roster inactive">					
+						<div class="row js-keepers keepers">
+							<h3>Keepers</h3>
 							<div class="player-container"></div>
+						</div>
+						<div class="row js-defenders">
+								<h3>Defenders</h3>
+								<div class="player-container"></div>
+						</div>
+						<div class="js-midfielders">
+							<h3>Midfielders</h3>
+								<div class="player-container"></div>
+						</div>
+						<div class="js-forwards">
+							<h3>Forwards</h3>
+								<div class="player-container"></div>
+						</div>
 					</div>
-					<div class="js-midfielders">
-						<h3>Midfielders</h3>
-							<div class="player-container"></div>
+
+					<button>	
+						<div class="col-12 js-history-button menu-title menu-bottom">
+							<img class="arrow closed" src="https://simpkinsand.co.uk/wp-content/uploads/2016/08/white-down-arrow-png.png">
+							<h3>Team History</h3>
+							<img class="ball" src="https://www.imagehandler.net/?iset=0117&istyle=0000&fmt=png&w=500&h=500&cmp=85&c=999&img=A1005715000&iindex=0063&retBlank=1x1"> 
+						</div>
+					</button>
+					
+					<div class="col-12 js-history history inactive">
+						<p>wiki info</p>
 					</div>
-					<div class="js-forwards">
-						<h3>Forwards</h3>
-							<div class="player-container"></div>
-					</div>
-				</div>
-				<div class="col-12 js-history-button menu-title menu-bottom">
-					<h3>Team History</h3>
-					<img src="https://www.imagehandler.net/?iset=0117&istyle=0000&fmt=png&w=500&h=500&cmp=85&c=999&img=A1005715000&iindex=0063&retBlank=1x1"> 
-				</div>
-				<div class="col-12 js-history history inactive">
-					<p>wiki info</p>
 				</div>
 			</div>
 
