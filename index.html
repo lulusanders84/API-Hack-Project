@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 	<meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
@@ -10,307 +10,96 @@
 	<link href="https://fonts.googleapis.com/css?family=Josefin+Sans|Open+Sans" rel="stylesheet">
 </head>
 <body>
+	<nav class="nav-bar role="navigation">
+		<section class="js-country-selector country-select">
+			<form onsubmit="handleCountrySelection(event)">
+				<label for="countries">
+					Countries:
+				</label>
+				<select id="countries">
+				</select>
+				<input id="country-submit" type="submit" name="submit" value="Loading..." disabled>
+			</form>
+		</section>		
+	</nav>
 	<header role="banner">
-		<h1> FIFA WORLD CUP Russia 2018</h1>
+		<h1> 
+			FIFA WORLD CUP Russia 2018
+			<br> <span>Country Profiles</span>
+		</h1>
 	</header>
 	<main role="main">
-		<section class="js-news-feed">
-			<img>
-			<div class="js-news-info">
-				<a></a>
-			</div>
+		<section aria-label="country profile" class="js-country-profile inactive">
+			<div class="row profile-container">
+				<div class="col-12">
+					<section aria-labeledby="country-name" class="col-12 country">
+						<div class="col-12 flag-container"></div>
+						<img class="js-flag left-flag" alt="country flag">
+						<div class="js-country-name country-name">
+							<h2 id="country-name">Country Name</h2>
+						</div>
+					</section>
+					<section aria-label="profile menu" class="col-12 menu-body">
+						<section aria-labelledby="results">
+								<button id="js-results">
+								<div class="col-12 js-results-button menu-title menu-top">
+									<img class="arrow closed" src="https://simpkinsand.co.uk/wp-content/uploads/2016/08/white-down-arrow-png.png">
+									<h3 id="results">Match Results</h3>
+									<img class="ball" src="https://www.imagehandler.net/?iset=0117&istyle=0000&fmt=png&w=500&h=500&cmp=85&c=999&img=A1005715000&iindex=0063&retBlank=1x1"> 
+								</div>
+							</button>
+							<div class="col-12 js-results results inactive">
+							</div>
+						</section>
+						<section aria-labelledby="roster">
+							<button id="js-roster" onclick="location.href='#js-roster'">	
+								<div class="col-12 js-roster-button menu-title">
+									<img class="arrow closed" src="https://simpkinsand.co.uk/wp-content/uploads/2016/08/white-down-arrow-png.png">
+									<h3 id="roster">Squad</h3>
+									<img class="ball" src="https://www.imagehandler.net/?iset=0117&istyle=0000&fmt=png&w=500&h=500&cmp=85&c=999&img=A1005715000&iindex=0063&retBlank=1x1"> 
+								</div>
+							</button>
+							<div class="col-12 js-roster roster inactive">					
+								<div class="row js-keepers keepers">
+									<h3>Keepers</h3>
+									<div class="player-container"></div>
+								</div>
+								<div class="row js-defenders">
+									<h3>Defenders</h3>
+									<div class="player-container"></div>
+								</div>
+								<div class="js-midfielders">
+									<h3>Midfielders</h3>
+									<div class="player-container"></div>
+								</div>
+								<div class="js-forwards">
+									<h3>Forwards</h3>
+									<div class="player-container"></div>
+								</div>
+							</div>
+						</section>
+						<section aria-labelledby="history">
+							<button id="js-history" onclick="location.href='#js-history'">	
+								<div class="col-12 js-history-button menu-title menu-bottom">
+									<img class="arrow closed" src="https://simpkinsand.co.uk/wp-content/uploads/2016/08/white-down-arrow-png.png">
+									<h3 id="history">Team History</h3>
+									<img class="ball" src="https://www.imagehandler.net/?iset=0117&istyle=0000&fmt=png&w=500&h=500&cmp=85&c=999&img=A1005715000&iindex=0063&retBlank=1x1"> 
+								</div>
+							</button>
+							<div class="col-12 js-history history inactive">
+								<p>wiki info</p>
+							</div>
+						</section>
+					</section>
+				</div>
+			</section>
 		</section>
-	<section class="row js-country-selector">
-		<form onsubmit="handleCountrySelection(event, countryCodes)">
-			<label for="countries">
-				Pick a country:
-			</label>
-			<select id="countries">
-			</select>
-			<input id="country-submit" type="submit" name="submit" value="Loading country data..." disabled>
-		</form>
-	</section>
-	<section class="js-bracket" hidden>
-		<div class="row">
-			<table id="group-a" class="left-group">
-				<th>Group A</th>
-				<th>PL</th>
-				<th>Pts</th>
-				<tr class="js-team-1">
-					<td class="js-team-name">Country 1</td>
-					<td class="js-played">0</td>
-					<td class="js-points">0</td>
-				</tr>
-				<tr class="js-team-2">
-					<td class="js-team-name">Country 2</td>
-					<td class="js-played">0</td>
-					<td class="js-points">0</td>
-				</tr>
-				<tr class="js-team-3">
-					<td class="js-team-name">Country 3</td>
-					<td class="js-played">0</td>
-					<td class="js-points">0</td>
-				</tr>
-				<tr class="js-team-4">
-					<td class="js-team-name">Country 4</td>
-					<td class="js-played">0</td>
-					<td class="js-points">0</td>
-				</tr>
-			</table>
-			<table id="group-b" class="right-group">
-				<th>Group B</th>
-				<th>PL</th>
-				<th>Pts</th>
-				<tr class="js-team-1">
-					<td class="js-team-name">Country 1</td>
-					<td class="js-played">0</td>
-					<td class="js-points">0</td>
-				</tr>
-				<tr class="js-team-2">
-					<td class="js-team-name">Country 2</td>
-					<td class="js-played">0</td>
-					<td class="js-points">0</td>
-				</tr>
-				<tr class="js-team-3">
-					<td class="js-team-name">Country 3</td>
-					<td class="js-played">0</td>
-					<td class="js-points">0</td>
-				</tr>
-				<tr class="js-team-4">
-					<td class="js-team-name">Country 4</td>
-					<td class="js-played">0</td>
-					<td class="js-points">0</td>
-				</tr>
-			</table>
-		</div>
-		<div class="row">
-			<table id="group-a" class="left-group">
-				<th>Group C</th>
-				<th>PL</th>
-				<th>Pts</th>
-				<tr class="js-team-1">
-					<td class="js-team-name">Country 1</td>
-					<td class="js-played">0</td>
-					<td class="js-points">0</td>
-				</tr>
-				<tr class="js-team-2">
-					<td class="js-team-name">Country 2</td>
-					<td class="js-played">0</td>
-					<td class="js-points">0</td>
-				</tr>
-				<tr class="js-team-3">
-					<td class="js-team-name">Country 3</td>
-					<td class="js-played">0</td>
-					<td class="js-points">0</td>
-				</tr>
-				<tr class="js-team-4">
-					<td class="js-team-name">Country 4</td>
-					<td class="js-played">0</td>
-					<td class="js-points">0</td>
-				</tr>
-			</table>
-			<table id="group-b" class="right-group">
-				<th>Group D</th>
-				<th>PL</th>
-				<th>Pts</th>
-				<tr class="js-team-1">
-					<td class="js-team-name">Country 1</td>
-					<td class="js-played">0</td>
-					<td class="js-points">0</td>
-				</tr>
-				<tr class="js-team-2">
-					<td class="js-team-name">Country 2</td>
-					<td class="js-played">0</td>
-					<td class="js-points">0</td>
-				</tr>
-				<tr class="js-team-3">
-					<td class="js-team-name">Country 3</td>
-					<td class="js-played">0</td>
-					<td class="js-points">0</td>
-				</tr>
-				<tr class="js-team-4">
-					<td class="js-team-name">Country 4</td>
-					<td class="js-played">0</td>
-					<td class="js-points">0</td>
-				</tr>
-			</table>
-		</div>
-		<div class="row">
-			<table id="group-a" class="left-group">
-				<th>Group E</th>
-				<th>PL</th>
-				<th>Pts</th>
-				<tr class="js-team-1">
-					<td class="js-team-name">Country 1</td>
-					<td class="js-played">0</td>
-					<td class="js-points">0</td>
-				</tr>
-				<tr class="js-team-2">
-					<td class="js-team-name">Country 2</td>
-					<td class="js-played">0</td>
-					<td class="js-points">0</td>
-				</tr>
-				<tr class="js-team-3">
-					<td class="js-team-name">Country 3</td>
-					<td class="js-played">0</td>
-					<td class="js-points">0</td>
-				</tr>
-				<tr class="js-team-4">
-					<td class="js-team-name">Country 4</td>
-					<td class="js-played">0</td>
-					<td class="js-points">0</td>
-				</tr>
-			</table>
-			<table id="group-b" class="right-group">
-				<th>Group F</th>
-				<th>PL</th>
-				<th>Pts</th>
-				<tr class="js-team-1">
-					<td class="js-team-name">Country 1</td>
-					<td class="js-played">0</td>
-					<td class="js-points">0</td>
-				</tr>
-				<tr class="js-team-2">
-					<td class="js-team-name">Country 2</td>
-					<td class="js-played">0</td>
-					<td class="js-points">0</td>
-				</tr>
-				<tr class="js-team-3">
-					<td class="js-team-name">Country 3</td>
-					<td class="js-played">0</td>
-					<td class="js-points">0</td>
-				</tr>
-				<tr class="js-team-4">
-					<td class="js-team-name">Country 4</td>
-					<td class="js-played">0</td>
-					<td class="js-points">0</td>
-				</tr>
-			</table>
-		</div>
-		<div class="row">
-			<table id="group-a" class="left-group">
-				<th>Group G</th>
-				<th>PL</th>
-				<th>Pts</th>
-				<tr class="js-team-1">
-					<td class="js-team-name">Country 1</td>
-					<td class="js-played">0</td>
-					<td class="js-points">0</td>
-				</tr>
-				<tr class="js-team-2">
-					<td class="js-team-name">Country 2</td>
-					<td class="js-played">0</td>
-					<td class="js-points">0</td>
-				</tr>
-				<tr class="js-team-3">
-					<td class="js-team-name">Country 3</td>
-					<td class="js-played">0</td>
-					<td class="js-points">0</td>
-				</tr>
-				<tr class="js-team-4">
-					<td class="js-team-name">Country 4</td>
-					<td class="js-played">0</td>
-					<td class="js-points">0</td>
-				</tr>
-			</table>
-			<table id="group-b" class="right-group">
-				<th>Group H</th>
-				<th>PL</th>
-				<th>Pts</th>
-				<tr class="js-team-1">
-					<td class="js-team-name">Country 1</td>
-					<td class="js-played">0</td>
-					<td class="js-points">0</td>
-				</tr>
-				<tr class="js-team-2">
-					<td class="js-team-name">Country 2</td>
-					<td class="js-played">0</td>
-					<td class="js-points">0</td>
-				</tr>
-				<tr class="js-team-3">
-					<td class="js-team-name">Country 3</td>
-					<td class="js-played">0</td>
-					<td class="js-points">0</td>
-				</tr>
-				<tr class="js-team-4">
-					<td class="js-team-name">Country 4</td>
-					<td class="js-played">0</td>
-					<td class="js-points">0</td>
-				</tr>
-			</table>
-		</div>
-	</section>
-
-	<section class="js-country-profile">
-		<div class="row profile-container">
-			<div class="col-12">
-				<div class="col-12 country">
-					<div class="col-12 flag-container"></div>
-					<img class="js-flag left-flag" alt="country flag">
-					<div class="js-country-name country-name"><h2>Country Name</h2></div>
-				</div>
-				<div class="col-12 menu-body">
-					<button>
-						<div class="col-12 js-results-button menu-title menu-top">
-							<img class="arrow closed" src="https://simpkinsand.co.uk/wp-content/uploads/2016/08/white-down-arrow-png.png">
-							<h3>Match Results</h3>
-							<img class="ball" src="https://www.imagehandler.net/?iset=0117&istyle=0000&fmt=png&w=500&h=500&cmp=85&c=999&img=A1005715000&iindex=0063&retBlank=1x1"> 
-						</div>
-					</button>
-
-					<div class="col-12 js-results results inactive">
-					</div>
-
-					<button>	
-						<div class="col-12 js-roster-button menu-title">
-							<img class="arrow closed" src="https://simpkinsand.co.uk/wp-content/uploads/2016/08/white-down-arrow-png.png">
-							<h3>Squad</h3>
-							<img class="ball" src="https://www.imagehandler.net/?iset=0117&istyle=0000&fmt=png&w=500&h=500&cmp=85&c=999&img=A1005715000&iindex=0063&retBlank=1x1"> 
-						</div>
-					</button>	
-
-					<div class="col-12 js-roster roster inactive">					
-						<div class="row js-keepers keepers">
-							<h3>Keepers</h3>
-							<div class="player-container"></div>
-						</div>
-						<div class="row js-defenders">
-								<h3>Defenders</h3>
-								<div class="player-container"></div>
-						</div>
-						<div class="js-midfielders">
-							<h3>Midfielders</h3>
-								<div class="player-container"></div>
-						</div>
-						<div class="js-forwards">
-							<h3>Forwards</h3>
-								<div class="player-container"></div>
-						</div>
-					</div>
-
-					<button>	
-						<div class="col-12 js-history-button menu-title menu-bottom">
-							<img class="arrow closed" src="https://simpkinsand.co.uk/wp-content/uploads/2016/08/white-down-arrow-png.png">
-							<h3>Team History</h3>
-							<img class="ball" src="https://www.imagehandler.net/?iset=0117&istyle=0000&fmt=png&w=500&h=500&cmp=85&c=999&img=A1005715000&iindex=0063&retBlank=1x1"> 
-						</div>
-					</button>
-					
-					<div class="col-12 js-history history inactive">
-						<p>wiki info</p>
-					</div>
-				</div>
-			</div>
-
-		</div>
-	</section>
-
 	</main>
 <script
   src="https://code.jquery.com/jquery-3.3.1.min.js"
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
   crossorigin="anonymous"></script>
-<script type="text/javascript" src="countryCodes.js"></script>
+<script type="text/javascript" src="data-store.js"></script>
 <script type="text/javascript" src="index.js"></script>
 
 </body>
