@@ -10,8 +10,8 @@
 	<link href="https://fonts.googleapis.com/css?family=Josefin+Sans|Open+Sans" rel="stylesheet">
 </head>
 <body>
-	<nav class="nav-bar role="navigation">
-		<section class="js-country-selector country-select">
+	<nav role="navigation">
+		<section class="js-country-selector country-select" role="region">
 			<form onsubmit="handleCountrySelection(event)">
 				<label for="countries">
 					Countries:
@@ -25,11 +25,14 @@
 	<header role="banner">
 		<h1> 
 			FIFA WORLD CUP Russia 2018
-			<br> <span>Country Profiles</span>
+			<br>
+			Country Profiles
 		</h1>
+		<span class="js-intro">Pick a country from the menu to begin</span>
+		
 	</header>
 	<main role="main">
-		<section aria-label="country profile" class="js-country-profile inactive">
+		<section aria-label="country profile" class="js-country-profile inactive" role="region">
 			<div class="row profile-container">
 				<div class="col-12">
 					<section aria-labeledby="country-name" class="col-12 country">
@@ -39,7 +42,7 @@
 							<h2 id="country-name">Country Name</h2>
 						</div>
 					</section>
-					<section aria-label="profile menu" class="col-12 menu-body">
+					<section aria-label="profile menu" class="col-12 menu-body" role="region">
 						<section aria-labelledby="results">
 								<button id="js-results">
 								<div class="col-12 js-results-button menu-title menu-top">
@@ -51,7 +54,7 @@
 							<div class="col-12 js-results results inactive">
 							</div>
 						</section>
-						<section aria-labelledby="roster">
+						<section aria-labelledby="roster" role="region">
 							<button id="js-roster" onclick="location.href='#js-roster'">	
 								<div class="col-12 js-roster-button menu-title">
 									<img class="arrow closed" src="https://simpkinsand.co.uk/wp-content/uploads/2016/08/white-down-arrow-png.png">
@@ -78,7 +81,7 @@
 								</div>
 							</div>
 						</section>
-						<section aria-labelledby="history">
+						<section aria-labelledby="history" role="region">
 							<button id="js-history" onclick="location.href='#js-history'">	
 								<div class="col-12 js-history-button menu-title menu-bottom">
 									<img class="arrow closed" src="https://simpkinsand.co.uk/wp-content/uploads/2016/08/white-down-arrow-png.png">

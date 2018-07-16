@@ -1,3 +1,4 @@
+'use strict';
 
 function startWorldCupApp() {
 	buildFixturesArrFromApiData();
@@ -86,13 +87,43 @@ function handleCollapsingMenu() {
 
 function handleCountrySelection(event) {
 	event.preventDefault();
-	const country = $('#countries option:selected').val();
-	processCountryResultsData(country);
+	const country = $('#countries option:selected').val();	
 	displayFlag(country);
 	displayCountryName(country);
+	processCountryResultsData(country);
 	getRosterArray(country);
 	getHistoryInfo(country);
 	removeInactiveClass("js-country-profile");
+	addInactiveClass("js-intro");
+	closeAllMenus();
+}
+
+function displayFlag(country) {
+	const url = getFlagUrl(country);
+	renderFlag(url, country);
+}
+
+function getFlagUrl(country) {
+	return fixtures.groupStage.reduce((acc, fixture) => {
+		if (fixture.home_team === country) {
+			acc = fixture.home_flag;
+		}
+		if (fixture.away_team === country) {
+			acc = fixture.away_flag;
+		}
+		return acc;
+	})
+}
+
+function renderFlag(url, country){
+	$('.js-flag').attr({
+		src: url,
+		alt: `${country}'s flag`,
+	})
+}
+
+function displayCountryName(country) {
+$('.js-country-name h2').html(country.toUpperCase());
 }
 
 function processCountryResultsData(country) {
@@ -128,17 +159,14 @@ function getResultsApiData(apiUrl, callbackFunc, fixturesArr, index) {
 }
 
 function callbackResultsData(data, fixturesArr, index) {
-	console.log("results callback running");
 	fixturesArr[index].results = data.data;
 }
 
 function errorResultsData(data, fixturesArr, index) {
-	console.log("error results data running");
 	fixturesArr[index].results = "No results found for this match";
 }
 
 function renderResults(country) {
-	console.log("display results is running");
 	const groupStageResults = getCountryFixturesData(country, fixtures.groupStage);
 	const knockoutStageResults = getCountryFixturesData(country, fixtures.knockout);
 	const results = [...knockoutStageResults, ...groupStageResults];
@@ -158,7 +186,6 @@ function getCountryFixturesData(country, fixtures) {
 function generateHtmlResults(match) {
 	let resultValues = {};
 	if (typeof match.results !== "object") {
-		console.log("conditional error ran");
 		resultValues = getErrorValues();
 	} else {
 		resultValues = getResultValues(match);
@@ -183,83 +210,7 @@ function generateHtmlResults(match) {
 				</div>
 				${resultValues.html()}
 			</div>`
-	};
-
-function generateHtmlHomeScorers(match) {
-	console.log("home scorers", getHomeScorers(match));
-	const homeScorers = getHomeScorers(match);
-	const scorers = homeScorers.map(scorer => {
-		return `<li class="scorer">
-				${scorer.title} ${scorer.minute}
-				</li>`
-	})
-	return scorers.join(" ");
-}
-
-function generateHtmlAwayScorers(match) {
-	const awayScorers = getAwayScorers(match);
-	const scorers = awayScorers.map(scorer => {
-		return `<li class="scorer">
-				${scorer.minute} ${scorer.title}
-				</li>`
-	})
-	return scorers.join(" ");
-}
-
-
-function displayFlag(country) {
-	const url = getFlagUrl(country);
-	renderFlag(url, country);
-}
-
-function getDateTime(match){
-	const date = new Date(match.datetime);
-	return date.toDateString();
-}
-
-function getHomeTeam(match) {
-	return match.home_team;
-}
-
-function getAwayTeam(match) {
-	return match.away_team;
-}
-
-function getScore(match) {
-	return match.results.score;
-}
-
-function getHomeScorers(match) {
-	const homeScorers = formatScorers(match.results.home_scoreres);
-	return sortScorersByMinute(homeScorers);
-}
-
-function sortScorersByMinute(scorersArray) {
-	return scorersArray.sort(function(a, b) {
-		if (a.minute < b.minute) {
-			return -1;
-		}
-		if (a.minute > b.minute) {
-			return 1;
-		}
-		return 0;
-	})
-}
-
-function formatScorers(scorersArray) {
-	return removeTrailingCommas(scorersArray);
-}
-
-function removeTrailingCommas(scorersArray) {
-	return scorersArray.map(goal => {
-		goal.minute = goal.minute.replace(/[,]/g, '');
-		return goal;
-	});
-}
-
-function getAwayScorers(match) {
-	return match.results.away_scoreres;
-}
+	}
 
 function getResultValues(match) {
 	return {
@@ -307,6 +258,73 @@ function getErrorValues() {
 	}
 }
 
+function generateHtmlHomeScorers(match) {
+	const homeScorers = getScorers(match.results.home_scoreres);
+	const scorers = homeScorers.map(scorer => {
+		return `<li class="scorer">
+				${scorer.title} ${scorer.minute}
+				</li>`
+	})
+	return scorers.join(" ");
+}
+
+function generateHtmlAwayScorers(match) {
+	const awayScorers = getScorers(match.results.away_scoreres);
+	const scorers = awayScorers.map(scorer => {
+		return `<li class="scorer">
+				${scorer.minute} ${scorer.title}
+				</li>`
+	})
+	return scorers.join(" ");
+}
+
+function getScorers(scorersArray) {
+	const scorers = formatScorers(scorersArray);
+	return sortScorersByMinute(scorers);
+}
+
+function sortScorersByMinute(scorersArray) {
+	return scorersArray.sort(function(a, b) {
+		if (a.minute < b.minute) {
+			return -1;
+		}
+		if (a.minute > b.minute) {
+			return 1;
+		}
+		return 0;
+	})
+}
+
+function formatScorers(scorersArray) {
+	return removeTrailingCommas(scorersArray);
+}
+
+function removeTrailingCommas(scorersArray) {
+	return scorersArray.map(goal => {
+		goal.minute = goal.minute.replace(/[,]/g, '');
+		return goal;
+	});
+}
+
+function getDateTime(match){
+	const date = new Date(match.datetime);
+	return date.toDateString();
+}
+
+function getHomeTeam(match) {
+	return match.home_team;
+}
+
+function getAwayTeam(match) {
+	return match.away_team;
+}
+
+function getScore(match) {
+	return match.results.score;
+}
+
+
+
 function assignCountryVar(countrySelection) {
 	country = countrySelection;
 }
@@ -315,6 +333,7 @@ function getRosterArray(country) {
 	getFootballDataApiData(FOOTBALL_DATA_TEAMS_URL, callbackFootballDataApiData, country);
 }
 
+//Football Data API has a unique ID for each team, response from this request returns data with team IDs and names
 function getFootballDataApiData(apiUrl, callbackFunc, country) {
 	$.ajax({
 			headers: { 
@@ -337,10 +356,10 @@ function callbackFootballDataApiData(response, country) {
 			}
 			return acc;
 		}, "");
-		getFootballDataApiData(FOOTBALL_DATA_PLAYERS_URL, callbackFootballDataApiPlayerData);
+		getFootballDataApiData(FOOTBALL_DATA_PLAYERS_URL, callbackFootballDataApiRosterData);
 }
 
-function callbackFootballDataApiPlayerData(response, country){
+function callbackFootballDataApiRosterData(response, country){
 	roster = sortRosterArr(response.players);
 	roster = roster.map(player => {
 		player.name = scorerLastNamesToUpperCase(player.name);
@@ -349,10 +368,8 @@ function callbackFootballDataApiPlayerData(response, country){
 		}
 		return player;
 	});
-	console.log(roster);
 	renderRoster();
 }
-
 
 function sortRosterArr(roster) {
 	return roster.sort(function(a, b) {
@@ -369,54 +386,6 @@ function scorerLastNamesToUpperCase(name) {
 	let nameArray = name.split(' ');
 	nameArray[nameArray.length -1] = nameArray[nameArray.length -1].toUpperCase();
 	return nameArray.join(" ");
-}
-
-function getHistoryInfo(country){
-	getWikipediaApiData(country);
-}
-
-function getWikipediaApiData(country) {
-	const apiUrl = `https://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&section=0&page=${country}_national_football_team&callback=?`;
-    return $.ajax({
-        type: "GET",
-        url: apiUrl,
-        contentType: "application/json; charset=utf-8",
-        async: false,
-        dataType: "json",
-        success: function (data, textStatus, jqXHR) {
-            buildHistoryString(data);
-            displayTeamHistory(history);
-        },
-        error: function (errorMessage) {
-        }
-    });
-}
-
-function buildHistoryString(data) {
-	history = data;
-}
-
-function getFlagUrl(country) {
-	return fixtures.groupStage.reduce((acc, fixture) => {
-		if (fixture.home_team === country) {
-			acc = fixture.home_flag;
-		}
-		if (fixture.away_team === country) {
-			acc = fixture.away_flag;
-		}
-		return acc;
-	})
-}
-
-function renderFlag(url, country){
-	$('.js-flag').attr({
-		src: url,
-		alt: `${country}'s flag`,
-	})
-}
-
-function displayCountryName(country) {
-$('.js-country-name h2').html(country.toUpperCase());
 }
 
 function renderRoster() {
@@ -453,8 +422,28 @@ function generatePositionList(position) {
 	}, [])
 }
 
-//renders history
-function displayTeamHistory(data) {
+function getHistoryInfo(country){
+	getWikipediaApiData(country);
+}
+
+function getWikipediaApiData(country) {
+	const apiUrl = `https://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&section=0&page=${country}_national_football_team&callback=?`;
+    return $.ajax({
+        type: "GET",
+        url: apiUrl,
+        contentType: "application/json; charset=utf-8",
+        async: false,
+        dataType: "json",
+        success: function (data, textStatus, jqXHR) {
+            renderTeamHistory(data);
+        },
+        error: function () {
+        	$('.js-history p').html("No team history found.");
+        }
+    });
+}
+
+function renderTeamHistory(data) {
 	var markup = data.parse.text["*"];
 	var blurb = $('<div class="js-wiki"></div>').html(markup); 
 	$('.js-history p').html($(blurb).find('p'));
@@ -464,13 +453,19 @@ function displayTeamHistory(data) {
 		});
 }
 
-//display class (remove "inactive" class)
 function removeInactiveClass(className) {
 	$(`.${className}`).removeClass("inactive");
+}
+
+function addInactiveClass(className) {
+	$(`.${className}`).addClass("inactive");
+}
+
+function closeAllMenus() {
+	closeMenu("js-results");
+	closeMenu("js-roster");
+	closeMenu("js-history");
 }	
-
-//function that handles submit country event
-
 
 function handleMenuSelect(className) {
 	$(`.${className}-button`).on("click", function() {
@@ -486,6 +481,8 @@ function toggleArrowImage(className) {
 
 function closeMenu(className) {
 	$(`.${className}-button img.arrow`).addClass("closed");
+	$(`.${className}`).addClass("inactive");
+	$(`.${className}-button img.ball`).removeClass("football-hide");
 }
 
 $(startWorldCupApp());
