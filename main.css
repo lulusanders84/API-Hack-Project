@@ -20,11 +20,12 @@ button:hover {
 }
 
 html {
-	min-height: 50vw;
+	min-height: 100%;
 	font-family: 'Open Sans', sans-serif;
-	background-image: url(https://cdn.viagogo.net/img/cat/2/1/37.jpg);
+	background-image: linear-gradient(to bottom, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0) 50%), url(https://cdn.viagogo.net/img/cat/2/1/37.jpg);
 	background-size: cover;
 	background-repeat: no-repeat;
+	background-position: center;
 }
 
 h1 {
@@ -32,6 +33,7 @@ h1 {
 	font-family: "dusha", sans-serif;
 	font-size: 3rem;
 	font-weight: 900;
+	margin-bottom: 5px;
 }
 
 h2 {
@@ -53,20 +55,19 @@ header {
 header span {
 	font-family: 'Open Sans', sans-serif;
 	font-weight: 900;
-	font-size: 2rem;
-	line-height: 2.5rem;
+	font-size: 1rem;
 	text-align: center;
 }
 
 form {
 	position: fixed;
-	margin: 20px 0;
+	margin: 15px 0;
 	padding: 0;	
 }
 
 select, input[type=submit], label {
-	padding: 7.5px;
-	font-size: 1.25rem;
+	padding: 5px;
+	font-size: 1rem;
 	font-weight: 800;
 	border: none;
 }
@@ -82,7 +83,7 @@ input[type=submit]:hover {
 }
 
 select {
-	font-size: 1rem;
+	font-size: .75rem;
 	font-weight: 500;
 }
 
@@ -411,7 +412,7 @@ nav {
 	color: white;
 	margin: auto 0;
 	width: 100%;
-	height: 80px;
+	height: 60px;
 }
 
 .country-select {
@@ -429,11 +430,7 @@ nav {
 		overflow: hidden;
 	}
 	html {
-		min-height: 100%;
-		font-family: 'Open Sans', sans-serif;
-		background-image: url(https://cdn.viagogo.net/img/cat/2/1/37.jpg);
 		background-size: auto 100%;
-		background-repeat: no-repeat;
 	}	
 	h1 {
 		padding: 10px;
@@ -446,6 +443,11 @@ nav {
 	h2 {
 		font-size: 2rem;
 		margin: 0;
+	}
+
+	header span {
+		font-size: 1.25rem;
+		margin: 10px;
 	}
 
 	select, input[type=submit], label {

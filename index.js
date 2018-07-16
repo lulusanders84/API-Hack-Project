@@ -402,19 +402,19 @@ function renderRoster() {
 	const attMid = [...generatePositionList("Attacking Midfield"), ...generatePositionList("Secondary Striker")];
 	const strikers = generatePositionList("Centre-Forward");
 	const forwards = [...attMid, ...strikers];
-	$('.js-keepers div').html(keepers);
-	$('.js-defenders div').html(defenders);
-	$('.js-midfielders div').html(midfielders);
-	$('.js-forwards div').html(forwards);
+	$('.js-keepers ul').html(keepers);
+	$('.js-defenders ul').html(defenders);
+	$('.js-midfielders ul').html(midfielders);
+	$('.js-forwards ul').html(forwards);
 }
 
 function generatePositionList(position) {
 
 	return roster.reduce((acc, player) => {
 		const pageName = player.name.replace(/ /g, "_");
-		const html = `<div class="player">
+		const html = `<li class="player">
 						<a href="https://en.wikipedia.org/wiki/${pageName}" target="blank"><span class="jersey-number">${player.jerseyNumber}</span> ${player.name}</a>
-					  </div>`;
+					  </li>`;
 		if (player.position.indexOf(position) != -1) {
 			acc.push(html);
 		}
