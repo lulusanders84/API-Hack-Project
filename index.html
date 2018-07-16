@@ -36,7 +36,7 @@
 		<section aria-label="country profile" class="js-country-profile inactive" role="region">
 			<div class="row profile-container">
 				<div class="col-12">
-					<section aria-labeledby="country-name" class="col-12 country">
+					<section aria-labeledby="country-name" aria-live="assertive" class="col-12 country" role="region">
 						<div class="col-12 flag-container"></div>
 						<img class="js-flag left-flag" alt="country flag">
 						<div class="js-country-name country-name">
@@ -44,23 +44,23 @@
 						</div>
 					</section>
 					<section aria-label="profile menu" class="col-12 menu-body" role="region">
-						<section aria-labelledby="results">
-								<button id="js-results">
-								<div class="col-12 js-results-button menu-title menu-top">
+						<section aria-labelledby="results" role="region">
+								<button class="js-results-button" type="submit" onsubmit="removeInactiveClass("js-results")">
+								<div class="col-12 menu-title menu-top">
 									<img class="arrow closed" src="https://simpkinsand.co.uk/wp-content/uploads/2016/08/white-down-arrow-png.png">
 									<h3 id="results">Match Results</h3>
-									<img class="ball" src="https://www.imagehandler.net/?iset=0117&istyle=0000&fmt=png&w=500&h=500&cmp=85&c=999&img=A1005715000&iindex=0063&retBlank=1x1"> 
+									<img class="ball" src="https://www.imagehandler.net/?iset=0117&istyle=0000&fmt=png&w=500&h=500&cmp=85&c=999&img=A1005715000&iindex=0063&retBlank=1x1" alt="football" aria-hidden="true"> 
 								</div>
 							</button>
 							<div class="col-12 js-results results inactive">
 							</div>
 						</section>
 						<section aria-labelledby="roster" role="region">
-							<button id="js-roster" onclick="location.href='#js-roster'">	
-								<div class="col-12 js-roster-button menu-title">
+							<button class="js-roster-button" onclick="location.href='#js-roster'" type="submit" onsubmit="removeInactiveClass("js-roster")">	
+								<div class="col-12 menu-title">
 									<img class="arrow closed" src="https://simpkinsand.co.uk/wp-content/uploads/2016/08/white-down-arrow-png.png">
 									<h3 id="roster">Squad</h3>
-									<img class="ball" src="https://www.imagehandler.net/?iset=0117&istyle=0000&fmt=png&w=500&h=500&cmp=85&c=999&img=A1005715000&iindex=0063&retBlank=1x1"> 
+									<img class="ball" src="https://www.imagehandler.net/?iset=0117&istyle=0000&fmt=png&w=500&h=500&cmp=85&c=999&img=A1005715000&iindex=0063&retBlank=1x1" alt="football"> 
 								</div>
 							</button>
 							<div class="col-12 js-roster roster inactive">					
@@ -83,11 +83,11 @@
 							</div>
 						</section>
 						<section aria-labelledby="history" role="region">
-							<button id="js-history" onclick="location.href='#js-history'">	
-								<div class="col-12 js-history-button menu-title menu-bottom">
+							<button class="js-history-button" onclick="location.href='#js-history'" type="submit" onsubmit="removeInactiveClass("js-history")">	
+								<div class="col-12 menu-title menu-bottom">
 									<img class="arrow closed" src="https://simpkinsand.co.uk/wp-content/uploads/2016/08/white-down-arrow-png.png">
 									<h3 id="history">Team History</h3>
-									<img class="ball" src="https://www.imagehandler.net/?iset=0117&istyle=0000&fmt=png&w=500&h=500&cmp=85&c=999&img=A1005715000&iindex=0063&retBlank=1x1"> 
+									<img class="ball" src="https://www.imagehandler.net/?iset=0117&istyle=0000&fmt=png&w=500&h=500&cmp=85&c=999&img=A1005715000&iindex=0063&retBlank=1x1" alt="football" aria-hidden="true"> 
 								</div>
 							</button>
 							<div class="col-12 js-history history inactive">
