@@ -98,9 +98,10 @@ function handleCountrySelection(event) {
 function processCountryResultsData(country) {
 	const allFixtureResultRequestSignatures = 	
 		[...getFixtureResults(fixtures.groupStage, country), ...getFixtureResults(fixtures.knockout, country)];
-	$.when(...allFixtureResultRequestSignatures).done(function() {
+	$.when(...allFixtureResultRequestSignatures).then(function() {
 		renderResults(country);
-	})
+		}, 
+		function() {renderResults(country)});
 }
 
 function getFixtureResults(fixtures, country) {
@@ -206,279 +207,262 @@ function generateHtmlAwayScorers(match) {
 }
 
 
-	function displayFlag(country) {
-		const url = getFlagUrl(country);
-		renderFlag(url, country);
-	}
+function displayFlag(country) {
+	const url = getFlagUrl(country);
+	renderFlag(url, country);
+}
 
-	function getDateTime(match){
-		const date = new Date(match.datetime);
-		return date.toDateString();
-	}
+function getDateTime(match){
+	const date = new Date(match.datetime);
+	return date.toDateString();
+}
 
-	function getHomeTeam(match) {
-		return match.home_team;
-	}
+function getHomeTeam(match) {
+	return match.home_team;
+}
 
-	function getAwayTeam(match) {
-		return match.away_team;
-	}
+function getAwayTeam(match) {
+	return match.away_team;
+}
 
-	function getScore(match) {
-		return match.results.score;
-	}
+function getScore(match) {
+	return match.results.score;
+}
 
-	function getHomeScorers(match) {
-		const homeScorers = formatScorers(match.results.home_scoreres);
-		return sortScorersByMinute(homeScorers);
-	}
+function getHomeScorers(match) {
+	const homeScorers = formatScorers(match.results.home_scoreres);
+	return sortScorersByMinute(homeScorers);
+}
 
-	function sortScorersByMinute(scorersArray) {
-		return scorersArray.sort(function(a, b) {
-			if (a.minute < b.minute) {
-				return -1;
+function sortScorersByMinute(scorersArray) {
+	return scorersArray.sort(function(a, b) {
+		if (a.minute < b.minute) {
+			return -1;
+		}
+		if (a.minute > b.minute) {
+			return 1;
+		}
+		return 0;
+	})
+}
+
+function formatScorers(scorersArray) {
+	return removeTrailingCommas(scorersArray);
+}
+
+function removeTrailingCommas(scorersArray) {
+	return scorersArray.map(goal => {
+		goal.minute = goal.minute.replace(/[,]/g, '');
+		return goal;
+	});
+}
+
+function getAwayScorers(match) {
+	return match.results.away_scoreres;
+}
+
+function getResultValues(match) {
+	return {
+		score: getScore(match),
+		homeScorers: generateHtmlHomeScorers(match),		
+		awayScorers: generateHtmlAwayScorers(match),
+		html: function() {
+			return `
+				<div class="container js-scorers scorers">
+					<div class="box js-home-scorers home">
+						<span>
+							<ul>
+								${this.homeScorers}
+							</ul>
+						</span>
+					</div>
+					<div class="box hidden">
+						<span>
+							hidden
+						</span>
+					</div>
+					<div class="box js-away-scorers away">
+						<span>
+							<ul>
+								${this.awayScorers}
+							</ul>
+						</span>
+					</div>
+				</div>`	
+		}		
+	}
+}
+
+function getErrorValues() {
+	return {
+		score: "---",
+		homeScorers: "NA",
+		awayScorers: "NA",
+		html: function () {
+			return `
+			<div class="result-error">
+				<p> No results found for this match </p>
+			</div> `
+		}
+	}
+}
+
+function assignCountryVar(countrySelection) {
+	country = countrySelection;
+}
+
+function getRosterArray(country) {
+	getFootballDataApiData(FOOTBALL_DATA_TEAMS_URL, callbackFootballDataApiData, country);
+}
+
+function getFootballDataApiData(apiUrl, callbackFunc, country) {
+	$.ajax({
+			headers: { 
+				'X-Auth-Token': 'f7302355bfde4075a668246ec2d7056e'
+},
+			url: apiUrl,
+			dataType: 'json',
+			type: 'GET',
+	}).done(function(response) {
+			callbackFunc(response, country);
+	});
+}
+
+function callbackFootballDataApiData(response, country) {
+	const teams = response.teams;
+		const FOOTBALL_DATA_PLAYERS_URL = teams.reduce((acc, team) => {
+			if (team.name === country) {
+				const href = team._links.players.href;
+				acc = href.substring(0, 4) + "s" + href.substring(4);
 			}
-			if (a.minute > b.minute) {
-				return 1;
+			return acc;
+		}, "");
+		getFootballDataApiData(FOOTBALL_DATA_PLAYERS_URL, callbackFootballDataApiPlayerData);
+}
+
+function callbackFootballDataApiPlayerData(response, country){
+	roster = sortRosterArr(response.players);
+	roster = roster.map(player => {
+		player.name = scorerLastNamesToUpperCase(player.name);
+		if (player.jerseyNumber === null) {
+			player.jerseyNumber = "--";
+		}
+		return player;
+	});
+	console.log(roster);
+	renderRoster();
+}
+
+
+function sortRosterArr(roster) {
+	return roster.sort(function(a, b) {
+		if (a.jerseyNumber < b.jerseyNumber) {
+			return -1;
+			} else if (a.jerseyNumber > b.jerseyNumber) {
+			return 1;
 			}
 			return 0;
-		})
-	}
+	});
+}
 
-	function formatScorers(scorersArray) {
-		return removeTrailingCommas(scorersArray);
-	}
+function scorerLastNamesToUpperCase(name) {
+	let nameArray = name.split(' ');
+	nameArray[nameArray.length -1] = nameArray[nameArray.length -1].toUpperCase();
+	return nameArray.join(" ");
+}
 
-	function removeTrailingCommas(scorersArray) {
-		return scorersArray.map(goal => {
-			goal.minute = goal.minute.replace(/[,]/g, '');
-			return goal;
-		});
-	}
+function getHistoryInfo(country){
+	getWikipediaApiData(country);
+}
 
-	function getAwayScorers(match) {
-		return match.results.away_scoreres;
-	}
+function getWikipediaApiData(country) {
+	const apiUrl = `https://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&section=0&page=${country}_national_football_team&callback=?`;
+    return $.ajax({
+        type: "GET",
+        url: apiUrl,
+        contentType: "application/json; charset=utf-8",
+        async: false,
+        dataType: "json",
+        success: function (data, textStatus, jqXHR) {
+            buildHistoryString(data);
+            displayTeamHistory(history);
+        },
+        error: function (errorMessage) {
+        }
+    });
+}
 
-	function getResultValues(match) {
-		return {
-			score: getScore(match),
-			homeScorers: generateHtmlHomeScorers(match),		
-			awayScorers: generateHtmlAwayScorers(match),
-			html: function() {
-				return `
-					<div class="container js-scorers scorers">
-						<div class="box js-home-scorers home">
-							<span>
-								<ul>
-									${this.homeScorers}
-								</ul>
-							</span>
-						</div>
-						<div class="box hidden">
-							<span>
-								hidden
-							</span>
-						</div>
-						<div class="box js-away-scorers away">
-							<span>
-								<ul>
-									${this.awayScorers}
-								</ul>
-							</span>
-						</div>
-					</div>`	
-			}		
+function buildHistoryString(data) {
+	history = data;
+}
+
+function getFlagUrl(country) {
+	return fixtures.groupStage.reduce((acc, fixture) => {
+		if (fixture.home_team === country) {
+			acc = fixture.home_flag;
 		}
-	}
-
-	function getErrorValues() {
-		return {
-			score: "---",
-			homeScorers: "NA",
-			awayScorers: "NA",
-			html: function () {
-				return `
-				<div class="result-error">
-					<p> No results found for this match </p>
-				</div> `
-			}
+		if (fixture.away_team === country) {
+			acc = fixture.away_flag;
 		}
-	}
-//generates HTML for results
+		return acc;
+	})
+}
 
+function renderFlag(url, country){
+	$('.js-flag').attr({
+		src: url,
+		alt: `${country}'s flag`,
+	})
+}
 
-//create country list and render country options in select tag
+function displayCountryName(country) {
+$('.js-country-name h2').html(country.toUpperCase());
+}
 
+function renderRoster() {
+	const keepers = generatePositionList("Keeper"); 
+	const leftDef = generatePositionList("Left-Back");
+	const centerDef = generatePositionList("Centre-Back");
+	const rightDef = generatePositionList("Right-Back");
+	const defenders = [...leftDef, ...centerDef, ...rightDef];
+	const defMid = generatePositionList("Defensive Midfield");
+	const leftMid = [...generatePositionList("Left Midfield"), ...generatePositionList("Left Wing")];
+	const centerMid = generatePositionList("Central Midfield");
+	const rightMid = [...generatePositionList("Right Midfield"), ...generatePositionList("Right Wing")];
+	const midfielders = [...defMid, ...leftMid, ...centerMid, ...rightMid];
+	const attMid = [...generatePositionList("Attacking Midfield"), ...generatePositionList("Secondary Striker")];
+	const strikers = generatePositionList("Centre-Forward");
+	const forwards = [...attMid, ...strikers];
+	$('.js-keepers div').html(keepers);
+	$('.js-defenders div').html(defenders);
+	$('.js-midfielders div').html(midfielders);
+	$('.js-forwards div').html(forwards);
+}
 
-//assign country variable
-	function assignCountryVar(countrySelection) {
-		country = countrySelection;
-	}
+function generatePositionList(position) {
 
-//retrieve roster from football data and build roster array
-	function getRosterArray(country) {
-		getFootballDataApiData(FOOTBALL_DATA_TEAMS_URL, callbackFootballDataApiData, country);
-	}
-
-	function getFootballDataApiData(apiUrl, callbackFunc, country) {
-		$.ajax({
-  			headers: { 
-  				'X-Auth-Token': 'f7302355bfde4075a668246ec2d7056e'
-	},
-  			url: apiUrl,
-  			dataType: 'json',
-  			type: 'GET',
-		}).done(function(response) {
- 			callbackFunc(response, country);
-		});
-	}
-
-	function callbackFootballDataApiData(response, country) {
-		const teams = response.teams;
-  		const FOOTBALL_DATA_PLAYERS_URL = teams.reduce((acc, team) => {
-  			if (team.name === country) {
-  				const href = team._links.players.href;
-  				acc = href.substring(0, 4) + "s" + href.substring(4);
-  			}
-  			return acc;
-  		}, "");
-  		getFootballDataApiData(FOOTBALL_DATA_PLAYERS_URL, callbackFootballDataApiPlayerData);
-	}
-
-	function callbackFootballDataApiPlayerData(response, country){
-		roster = sortRosterArr(response.players);
-		roster = roster.map(player => {
-			player.name = scorerLastNamesToUpperCase(player.name);
-			return player;
-		});
-		console.log(roster);
-		renderRoster();
-	}
-
-
-	function sortRosterArr(roster) {
-		return roster.sort(function(a, b) {
-			if (a.jerseyNumber < b.jerseyNumber) {
-    			return -1;
-  			} else if (a.jerseyNumber > b.jerseyNumber) {
-    			return 1;
-  			}
-  			return 0;
-		});
-	}
-
-	function scorerLastNamesToUpperCase(name) {
-		let nameArray = name.split(' ');
-		nameArray[nameArray.length -1] = nameArray[nameArray.length -1].toUpperCase();
-		return nameArray.join(" ");
-	}
-
-//retrieve wikipedia data and places in variable
-	function getHistoryInfo(country){
-		getWikipediaApiData(country);
-	}
-
-	function getWikipediaApiData(country) {
-		const apiUrl = `https://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&section=0&page=${country}_national_football_team&callback=?`;
-	    return $.ajax({
-	        type: "GET",
-	        url: apiUrl,
-	        contentType: "application/json; charset=utf-8",
-	        async: false,
-	        dataType: "json",
-	        success: function (data, textStatus, jqXHR) {
-	            buildHistoryString(data);
-	            displayTeamHistory(history);
-	        },
-	        error: function (errorMessage) {
-	        }
-	    });
-	}
-
-
-
-	function buildHistoryString(data) {
-		history = data;
-	}
-
-//display flag
-
-
-	function getFlagUrl(country) {
-		return fixtures.groupStage.reduce((acc, fixture) => {
-			if (fixture.home_team === country) {
-				acc = fixture.home_flag;
-			}
-			if (fixture.away_team === country) {
-				acc = fixture.away_flag;
-			}
-			return acc;
-		})
-	}
-
-	function renderFlag(url, country){
-		$('.js-flag').attr({
-			src: url,
-			alt: `${country}'s flag`,
-		})
-	}
-
-//displays country name
-	
-	function displayCountryName(country) {
-	$('.js-country-name h2').html(country.toUpperCase());
-	}
-
-//retrieves results data from fixture arrays
-
-
-
-//renders roster
-	function renderRoster() {
-		const keepers = generatePositionList("Keeper"); 
-		const leftDef = generatePositionList("Left-Back");
-		const centerDef = generatePositionList("Centre-Back");
-		const rightDef = generatePositionList("Right-Back");
-		const defenders = [...leftDef, ...centerDef, ...rightDef];
-		const defMid = generatePositionList("Defensive Midfield");
-		const leftMid = [...generatePositionList("Left Midfield"), ...generatePositionList("Left Wing")];
-		const centerMid = generatePositionList("Central Midfield");
-		const rightMid = [...generatePositionList("Right Midfield"), ...generatePositionList("Right Wing")];
-		const midfielders = [...defMid, ...leftMid, ...centerMid, ...rightMid];
-		const attMid = [...generatePositionList("Attacking Midfield"), ...generatePositionList("Secondary Striker")];
-		const strikers = generatePositionList("Centre-Forward");
-		const forwards = [...attMid, ...strikers];
-		$('.js-keepers div').html(keepers);
-		$('.js-defenders div').html(defenders);
-		$('.js-midfielders div').html(midfielders);
-		$('.js-forwards div').html(forwards);
-	}
-
-	function generatePositionList(position) {
-
-		return roster.reduce((acc, player) => {
-			const pageName = player.name.replace(/ /g, "_");
-			const html = `<div class="player">
-							<p><a href="https://en.wikipedia.org/wiki/${pageName}" target="blank">${player.name}</a></p>
-						  </div>`;
-			if (player.position.indexOf(position) != -1) {
-				acc.push(html);
-			}
-			return acc;
-		}, [])
-	}
+	return roster.reduce((acc, player) => {
+		const pageName = player.name.replace(/ /g, "_");
+		const html = `<div class="player">
+						<a href="https://en.wikipedia.org/wiki/${pageName}" target="blank"><span class="jersey-number">${player.jerseyNumber}</span> ${player.name}</a>
+					  </div>`;
+		if (player.position.indexOf(position) != -1) {
+			acc.push(html);
+		}
+		return acc;
+	}, [])
+}
 
 //renders history
-	function displayTeamHistory(data) {
-   	var markup = data.parse.text["*"];
-   	var blurb = $('<div class="js-wiki"></div>').html(markup); 
-   	$('.js-history p').html($(blurb).find('p'));
-   	$( "a[href^='/']" ).prop( "href", function( _idx, oldHref ) {
-   		const href = oldHref.split('/');
-   		return "https://en.wikipedia.org/wiki/" + href[href.length - 1];
-  		});
-	}
+function displayTeamHistory(data) {
+	var markup = data.parse.text["*"];
+	var blurb = $('<div class="js-wiki"></div>').html(markup); 
+	$('.js-history p').html($(blurb).find('p'));
+	$( "a[href^='/']" ).prop( "href", function( _idx, oldHref ) {
+		const href = oldHref.split('/');
+		return "https://en.wikipedia.org/wiki/" + href[href.length - 1];
+		});
+}
 
 //display class (remove "inactive" class)
 function removeInactiveClass(className) {

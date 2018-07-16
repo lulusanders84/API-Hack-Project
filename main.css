@@ -62,19 +62,24 @@ form {
 
 select, input[type=submit], label {
 	padding: 10px;
-	font-size: 1rem;
+	font-size: 1.25rem;
+	font-weight: 800;
 	border: none;
 }
 
- input[type=submit] {
+input[type=submit] {
  	background-color: black;
  	color: white;
- 	border: none;
- }
+ 	margin-left: 10px;
+}
 
-label {
-	font-size: 1.25rem;
-	font-weight: 800;
+input[type=submit]:hover {
+	cursor: pointer;
+}
+
+select {
+	font-size: 1rem;
+	font-weight: 500;
 }
 
 ul {
@@ -91,9 +96,18 @@ a:link {
     color: white;
 }
 
+.history a:link {
+	text-decoration: underline;
+	color: black;
+}
+
 a:visited {
     text-decoration: none;
     color: #e6e6e6;
+}
+
+.history a:visited {
+	color: #551A8B;
 }
 
 a:hover {
@@ -220,14 +234,10 @@ img.ball {
 }
 
 .player {
+	height: 50px;	
 	width: 25%;
 	padding-left: 2%;
 	padding-right: 2%;
-
-}
-.player img {
-	width: 100%;
-	height: auto;
 }
 
 .player-container {
@@ -243,9 +253,11 @@ img.ball {
 	padding-bottom: 20px;
 }
 
-.results, .history {
-	background-color: rgba(0, 0, 0, 0.5);	
-	opacity: 0.8;
+
+.history {
+	line-height: 24px;
+	background-color: rgba(255, 255, 255, 0.8);
+	color: black;	
 }
 
 .results {
@@ -254,6 +266,8 @@ img.ball {
 	display: flex;
 	justify-content: center;
 	flex-direction: column;
+	background-color: rgba(0, 0, 0, 0.5);	
+	opacity: 0.8;
 }
 
 .result, .scorers {
@@ -276,16 +290,30 @@ img.ball {
 	height: 30px;
 }
 
-.result-error {
+.result-error p {
+	text-align: center;
 	margin: 0 auto;
 }
 
 .roster {
 	color: white;
 	text-align: center;
-	background-image: linear-gradient(to bottom, rgba(0, 128, 0, 0.5), rgba(0, 204, 0, 0.5));
+	background-color: rgba(0, 204, 0, 0.5);
 	background-size: contain;
 	background-repeat: no-repeat;
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+
+.roster h3 {
+	padding: 10px 0;
+	color: black;
+	font-size: 20px;
+	font-weight: 900;
+}
+
+.jersey-number {
+	font-weight: 800;
 }
 
 .date {
@@ -383,6 +411,15 @@ nav {
 }
 
 @media only screen and (max-width: 640px) {
+	button {
+		width: 100%;
+		border: none;
+		margin-bottom: .5vw;
+		height: 8vw;
+		background-color: black;
+		color: white;
+		overflow: hidden;
+	}
 	html {
 		min-height: 100%;
 		font-family: 'Open Sans', sans-serif;
@@ -391,11 +428,11 @@ nav {
 		background-repeat: no-repeat;
 	}	
 	h1 {
-	padding: 10px;
-	text-align: center;
-	font-family: "dusha", sans-serif;
-	font-size: 1.5rem;
-	font-weight: 900;
+		padding: 10px;
+		text-align: center;
+		font-family: "dusha", sans-serif;
+		font-size: 1.5rem;
+		font-weight: 900;
 	}
 
 	h2 {
@@ -405,8 +442,8 @@ nav {
 
 	select, input[type=submit], label {
 		margin: 5px;
-		padding: 5px 10px; 
-		font-size: .75rem;
+		padding: 5px 5px; 
+		font-size: .9rem;
 		font-weight: 800;
 		border: none;
 	}
@@ -414,13 +451,12 @@ nav {
 	 input[type=submit] {
 	 	background-color: black;
 	 	color: white;
-	 	border: none;
 	}
 
 	.country img {
-		margin-left: -50%;
+		margin-left: -12.5%;
 		float: left;
-		width: 200%;
+		width: 125%;
 		height: auto;
 	}
 
@@ -465,7 +501,7 @@ nav {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	height: 1rem;
+	height: 2rem;
 	background-color: black;
 	color: white;
 	overflow: hidden;
@@ -475,20 +511,30 @@ nav {
 		position: relative;
 		left: 5vw;
 		align-self: center;
-		font-size: .80rem;
+		font-size: 1rem;
 		vertical-align: center;
 		padding-top: 0px;
 		float: left;
 	}
 
 	.player-container {
-	display: block;
+		display: block;
 	}
 
 	.player {
 		margin: 0 auto;
 		width: 80%;
 	}
+
+	.result, .scorers {
+		font-size: .8rem;
+	}
+
+.date {
+	font-size: 1rem;
+	}
+	
+
 }
 
 
