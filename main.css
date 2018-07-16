@@ -33,7 +33,7 @@ h1 {
 	font-family: "dusha", sans-serif;
 	font-size: 3rem;
 	font-weight: 900;
-	margin-bottom: 5px;
+	margin-bottom: 15px;
 }
 
 h2 {
@@ -52,10 +52,11 @@ header {
 	text-align: center;
 }
 
-header span {
+header p {
+	margin-top: 10px;
 	font-family: 'Open Sans', sans-serif;
 	font-weight: 900;
-	font-size: 1rem;
+	font-size: 1.25rem;
 	text-align: center;
 }
 
