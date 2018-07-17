@@ -297,7 +297,6 @@ function sortScorersByMinute(scorersArray) {
 	scorers = scorers.map(scorer => {
 		scorer.minute.toString();
 		scorer.minute = `${scorer.minute}'`;
-		console.log(scorer.minute);
 		return scorer;
 	})
 	return scorers;
