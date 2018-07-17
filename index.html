@@ -29,17 +29,16 @@
 			<br>
 			Country Profiles
 		</h1>
-		<p class="row js-intro">Pick a country from the menu to see match results, the team squad and a history of the country's national football team.</p>
-		
+		<p class="row js-intro">Pick a country from the menu to see match results, the team squad and a history of the country's national football team.</p>	
 	</header>
 	<main role="main">
-		<section aria-label="country profile" class="js-country-profile inactive" role="region">
+		<section aria-label="country profile" class="js-country-profile inactive" aria-hidden="true" role="region">
 			<div class="row profile-container">
 				<div class="col-12">
-					<section aria-labeledby="country-name" aria-live="assertive" class="col-12 country" role="region">
+					<section aria-labelledby="country-name" class="col-12 country" role="region">
 						<div class="col-12 flag-container"></div>
 						<img class="js-flag left-flag" alt="country flag">
-						<div class="js-country-name country-name">
+						<div class="js-country-name country-name" aria-live="polite">
 							<h2 id="country-name">Country Name</h2>
 						</div>
 					</section>

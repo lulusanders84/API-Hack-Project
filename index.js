@@ -94,6 +94,7 @@ function handleCountrySelection(event) {
 	getRosterArray(country);
 	getHistoryInfo(country);
 	removeInactiveClass("js-country-profile");
+	changeAriaHidden();
 	addInactiveClass("js-intro");
 	closeAllMenus();
 }
@@ -284,15 +285,22 @@ function getScorers(scorersArray) {
 }
 
 function sortScorersByMinute(scorersArray) {
-	return scorersArray.sort(function(a, b) {
-		if (a.minute < b.minute) {
-			return -1;
-		}
-		if (a.minute > b.minute) {
-			return 1;
-		}
-		return 0;
+	let scorers = scorersArray.map(scorer => {
+		let minute = scorer.minute.replace(/[']/g, " ");
+		minute = parseInt(minute);
+		scorer.minute = minute;
+		return scorer;
 	})
+	scorers = scorers.sort(function(a, b) {
+		return a.minute - b.minute;
+	})
+	scorers = scorers.map(scorer => {
+		scorer.minute.toString();
+		scorer.minute = `${scorer.minute}'`;
+		console.log(scorer.minute);
+		return scorer;
+	})
+	return scorers;
 }
 
 function formatScorers(scorersArray) {
@@ -456,6 +464,11 @@ function renderTeamHistory(data) {
 function removeInactiveClass(className) {
 	$(`.${className}`).removeClass("inactive");
 }
+
+function changeAriaHidden() {
+	$(".js-country-profile").attr({"aria-hidden": "false"});
+}
+
 
 function addInactiveClass(className) {
 	$(`.${className}`).addClass("inactive");
