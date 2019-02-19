@@ -9,17 +9,17 @@ function startWorldCupApp() {
 function buildFixturesArrFromApiData() {
 	$.when($.getJSON(FIFA_FIXTURES_URL, callbackFixtureData)).done(function() {
 		fixturesArrayIsReady();
-	});	
+	});
 }
 
-function callbackFixtureData(data) {	
+function callbackFixtureData(data) {
 	fixtures.groupStage = assignFixtures(data.data.group_stages);
 	fixtures.knockout = assignFixtures(data.data.knockout_stages);
 }
 
 function assignFixtures(data) {
 	const fixtures = data;
-	return createFixtures(fixtures); 	
+	return createFixtures(fixtures);
 }
 
 function createFixtures(fixtures) {
@@ -67,7 +67,7 @@ function enableCountrySelectionSubmit(){
 function generateSelectCountryOptions(teams) {
 	const countries = Object.keys(teams).reduce((acc, key) => {
 		return [...acc, ...teams[key]];
-	}, 	[])		
+	}, 	[])
 	return countries.sort();
 }
 
@@ -87,7 +87,7 @@ function handleCollapsingMenu() {
 
 function handleCountrySelection(event) {
 	event.preventDefault();
-	const country = $('#countries option:selected').val();	
+	const country = $('#countries option:selected').val();
 	displayFlag(country);
 	displayCountryName(country);
 	processCountryResultsData(country);
@@ -128,11 +128,11 @@ $('.js-country-name h2').html(country.toUpperCase());
 }
 
 function processCountryResultsData(country) {
-	const allFixtureResultRequestSignatures = 	
+	const allFixtureResultRequestSignatures =
 		[...getFixtureResults(fixtures.groupStage, country), ...getFixtureResults(fixtures.knockout, country)];
 	$.when(...allFixtureResultRequestSignatures).then(function() {
 		renderResults(country);
-		}, 
+		},
 		function() {renderResults(country)});
 }
 
@@ -175,7 +175,7 @@ function renderResults(country) {
 }
 
 function getCountryFixturesData(country, fixtures) {
-	return fixtures.reduce((acc, fixture) => {		
+	return fixtures.reduce((acc, fixture) => {
 		if (fixture.home_team === country || fixture.away_team === country) {
 			const htmlResults = generateHtmlResults(fixture);
 			acc.unshift(htmlResults);
@@ -192,17 +192,17 @@ function generateHtmlResults(match) {
 		resultValues = getResultValues(match);
 	}
 
-	return `<div class="match">		
+	return `<div class="match">
 				<div class="col-12 date">${getDateTime(match)}</div>
 				<div class="container result">
 					<div class="box home">
 						<span>
 							<span>${getHomeTeam(match)}</span> <img src="${match.home_flag}">
 						</span>
-					</div> 
+					</div>
 					<div class="box score">
 						<span>${resultValues.score}</span>
-					</div> 
+					</div>
 					<div class="box away">
 						<span>
 							<img src="${match.away_flag}"> <span>${getAwayTeam(match)}</span>
@@ -216,7 +216,7 @@ function generateHtmlResults(match) {
 function getResultValues(match) {
 	return {
 		score: getScore(match),
-		homeScorers: generateHtmlHomeScorers(match),		
+		homeScorers: generateHtmlHomeScorers(match),
 		awayScorers: generateHtmlAwayScorers(match),
 		html: function() {
 			return `
@@ -240,8 +240,8 @@ function getResultValues(match) {
 							</ul>
 						</span>
 					</div>
-				</div>`	
-		}		
+				</div>`
+		}
 	}
 }
 
@@ -343,7 +343,7 @@ function getRosterArray(country) {
 //Football Data API has a unique ID for each team, response from this request returns data with team IDs and names
 function getFootballDataApiData(apiUrl, callbackFunc, country) {
 	$.ajax({
-			headers: { 
+			headers: {
 				'X-Auth-Token': 'f7302355bfde4075a668246ec2d7056e'
 },
 			url: apiUrl,
@@ -396,7 +396,7 @@ function scorerLastNamesToUpperCase(name) {
 }
 
 function renderRoster() {
-	const keepers = generatePositionList("Keeper"); 
+	const keepers = generatePositionList("Keeper");
 	const leftDef = generatePositionList("Left-Back");
 	const centerDef = generatePositionList("Centre-Back");
 	const rightDef = generatePositionList("Right-Back");
@@ -452,12 +452,17 @@ function getWikipediaApiData(country) {
 
 function renderTeamHistory(data) {
 	var markup = data.parse.text["*"];
-	var blurb = $('<div class="js-wiki"></div>').html(markup); 
+	var blurb = $('<div class="js-wiki"></div>').html(markup);
 	$('.js-history p').html($(blurb).find('p'));
 	$( "a[href^='/']" ).prop( "href", function( _idx, oldHref ) {
 		const href = oldHref.split('/');
 		return "https://en.wikipedia.org/wiki/" + href[href.length - 1];
-		});
+	});
+	removeCiteError();
+}
+
+function removeCiteError() {
+	$('.error').remove();
 }
 
 function removeInactiveClass(className) {
@@ -477,7 +482,7 @@ function closeAllMenus() {
 	closeMenu("js-results");
 	closeMenu("js-roster");
 	closeMenu("js-history");
-}	
+}
 
 function handleMenuSelect(className) {
 	$(`.${className}-button`).on("click", function() {
